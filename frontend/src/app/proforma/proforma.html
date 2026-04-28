@@ -210,35 +210,27 @@
 
   <!-- HISTORIAL -->
   <div class="card mt-20">
-    <h3>Historial de comprobantes generados</h3>
+    <h3>Historial de proformas</h3>
     <table class="tabla">
       <thead>
         <tr>
           <th>ID</th>
           <th>Cliente</th>
-          <th>Vehículo</th>
-          <th>Fecha</th>
-          <th>Subtotal</th>
-          <th>IGV</th>
+          <th>Fecha emisión</th>
+          <th>Fecha vencimiento</th>
           <th>Total</th>
-          <th>Comprobante</th>
-          <th>Estado</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngIf="historial.length === 0">
-          <td colspan="9" class="empty">Todavía no se generó ningún comprobante.</td>
+          <td colspan="5" class="empty">Todavía no se generó ninguna proforma.</td>
         </tr>
         <tr *ngFor="let h of historial">
-          <td>{{ h.id ?? h.id_comprobante }}</td>
-          <td>{{ h.cliente ?? (h.nombre_cliente ? h.nombre_cliente + ' ' + (h.apellido_cliente ?? '') : h.id_cliente) }}</td>
-          <td>{{ h.vehiculo ?? h.placa_vehiculo ?? '' }}</td>
-          <td>{{ h.fecha ?? h.fecha_emision }}</td>
-          <td>S/ {{ (h.subtotal ?? 0).toFixed(2) }}</td>
-          <td>S/ {{ (h.igv ?? 0).toFixed(2) }}</td>
-          <td>S/ {{ (h.total ?? h.total_comprobante ?? 0).toFixed(2) }}</td>
-          <td>{{ h.comprobante ?? h.tipo_comprobante }}</td>
-          <td>{{ h.estado ?? 'CONVERTIDA' }}</td>
+          <td>{{ h.id_proforma }}</td>
+          <td>{{ h.nombre_cliente }}</td>
+          <td>{{ h.fecha_emision }}</td>
+          <td>{{ h.fecha_vencimiento }}</td>
+          <td>S/ {{ (h.total ?? 0).toFixed(2) }}</td>
         </tr>
       </tbody>
     </table>

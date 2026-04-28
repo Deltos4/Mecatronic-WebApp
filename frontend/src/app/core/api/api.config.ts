@@ -12,8 +12,8 @@ export const API_ENDPOINTS = {
   // Productos
   PRODUCTOS: 'productos',
   PRODUCTO_BY_ID: (id: number) => `productos/${id}`,
-  MARCAS_PRODUCTO: 'marcas-producto',
-  CATEGORIAS_PRODUCTO: 'categorias-producto',
+  MARCAS_PRODUCTO: 'productos/marcas',
+  CATEGORIAS_PRODUCTO: 'productos/categorias',
 
   // Órdenes de servicio
   ORDENES_SERVICIO: 'ordenservicio',

@@ -66,7 +66,7 @@ export class ProformaComponent implements OnInit {
     this.api.getVehiculos().subscribe({ next: d => this.vehiculos = d ?? [] });
     this.api.getPagosMethods().subscribe({ next: d => this.metodosPago = d ?? [] });
 
-    this.api.getComprobantes().subscribe({
+    this.api.getProformas().subscribe({
       next: d => { this.historial = d ?? []; this.cargando = false; },
       error: () => { this.cargando = false; }
     });

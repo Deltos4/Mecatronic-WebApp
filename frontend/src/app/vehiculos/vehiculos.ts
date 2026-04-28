@@ -80,7 +80,7 @@ export class VehiculosComponent implements OnInit {
   }
 
   cargarModelos(): void {
-    this.api.get<ModeloVehiculo[]>('modelos-vehiculo').subscribe({
+    this.api.getModelosVehiculo().subscribe({
       next: (d) => this.modelos = d ?? [],
       error: () => {
         console.error('No se pudieron cargar los modelos');

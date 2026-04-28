@@ -64,10 +64,8 @@ export class RegistroComponent {
     this.cargando = true;
 
     this.api.post<any>('auth/register', {
-      nombre,
-      apellido,
-      correo,
-      telefono: telefono || null,
+      nombre_usuario: `${nombre} ${apellido}`.trim(),
+      correo_usuario: correo,
       contrasena: pass,
       id_rol: 4  // rol Cliente
     }).subscribe({
