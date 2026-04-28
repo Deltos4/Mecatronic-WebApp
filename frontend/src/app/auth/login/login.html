@@ -1,0 +1,97 @@
+<div class="login-page">
+  <div class="container" style="max-width: 900px;">
+
+    <!-- Card Información -->
+    <div class="card shadow-sm mb-4 border-0" style="border-radius:14px;">
+      <div class="card-body p-4 text-center">
+        <h2 class="mb-3 fw-semibold">
+          Reparación, Mantenimiento y Venta de Repuestos Automotrices
+          Mecatronic Motor's
+        </h2>
+
+        <p class="mb-3">
+          <strong>Mecatronic Motors S.A.C.</strong> es una empresa dedicada a la
+          prestación de servicios de <strong>mantenimiento</strong>,
+          <strong>reparación</strong> y <strong>diagnóstico automotriz</strong>,
+          orientada a brindar soluciones confiables y de calidad a sus clientes.
+        </p>
+
+        <p class="text-muted mb-0" style="max-width: 720px; margin: 0 auto;">
+          A través de esta plataforma web, la empresa gestiona de manera eficiente
+          la atención de vehículos, el control de servicios, la venta de repuestos
+          y el seguimiento de las operaciones del taller.
+        </p>
+      </div>
+    </div>
+
+    <!-- Card Login -->
+    <div class="card shadow border-0 login-card" style="border-radius:14px;">
+      <div class="card-body p-4">
+
+        <div class="text-center mb-4">
+          <img src="assets/logo_meca.png" class="login-logo mb-3" alt="Mecatronic Motors">
+
+          <h5 class="mb-1">Mecatronic Motors S.A.C.</h5>
+          <p class="text-muted mb-0">Acceso al sistema</p>
+        </div>
+
+        <form (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label class="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="CorreoUsuario"
+              name="correo"
+              placeholder="ejemplo@mecatronic.com"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <div class="input-group">
+              <input
+                [type]="verPass ? 'text' : 'password'"
+                class="form-control"
+                [(ngModel)]="Contrasena"
+                name="contrasena"
+                placeholder="********"
+                required
+              />
+              <button type="button" class="btn btn-outline-secondary" (click)="verPass = !verPass">
+                {{ verPass ? '🙈' : '👁️' }}
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger py-2">
+            {{ errorMessage }}
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+            [disabled]="cargando"
+          >
+            {{ cargando ? 'Ingresando...' : 'Iniciar sesión' }}
+          </button>
+
+          <div class="text-center mt-3">
+            <a routerLink="/registro">Crear cuenta</a>
+          </div>
+
+          <div class="text-center mt-3">
+            <a routerLink="/recuperar" class="text-decoration-none">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+        </form>
+
+
+
+      </div>
+    </div>
+
+  </div>
+</div>

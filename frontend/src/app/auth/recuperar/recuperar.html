@@ -1,0 +1,50 @@
+<div class="login-page">
+  <div class="container" style="max-width:500px;">
+
+    <div class="card shadow-sm mb-4 border-0" style="border-radius:14px;">
+      <div class="card-body p-4 text-center">
+        <h2 class="mb-2 fw-semibold">🔑 Recuperar contraseña</h2>
+        <p class="text-muted mb-0">Ingresa tu correo y te enviaremos las instrucciones.</p>
+      </div>
+    </div>
+
+    <div class="card shadow border-0" style="border-radius:14px;">
+      <div class="card-body p-4">
+
+        <!-- Paso 1: ingresar correo -->
+        <form *ngIf="paso === 1" (ngSubmit)="buscarCuenta()">
+          <div class="mb-3">
+            <label class="form-label">Correo electrónico <span class="text-danger">*</span></label>
+            <input type="email" class="form-control"
+                   [(ngModel)]="correo" name="correo"
+                   placeholder="ejemplo@correo.com" required>
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger py-2">{{ errorMessage }}</div>
+
+          <button type="submit" class="btn btn-primary w-100" [disabled]="cargando">
+            {{ cargando ? 'Enviando...' : 'Enviar instrucciones' }}
+          </button>
+        </form>
+
+        <!-- Paso 2: confirmación -->
+        <div *ngIf="paso === 2" class="text-center">
+          <div style="font-size:48px;">📧</div>
+          <div class="alert alert-success mt-3">{{ okMessage }}</div>
+          <p class="text-muted small mt-2">
+            Si no ves el correo en tu bandeja principal, revisa la carpeta de <strong>spam</strong>.
+          </p>
+          <a routerLink="/login" class="btn btn-outline-primary mt-2">
+            Volver al inicio de sesión
+          </a>
+        </div>
+
+        <hr *ngIf="paso === 1">
+        <div class="text-center" *ngIf="paso === 1">
+          <a routerLink="/login" class="text-decoration-none">Volver a iniciar sesión</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

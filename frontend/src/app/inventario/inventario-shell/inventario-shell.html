@@ -1,0 +1,24 @@
+<div class="inv-page">
+
+  <div class="inv-header">
+    <div>
+      <h2 class="inv-title">Inventario</h2>
+      <p class="inv-subtitle">Repuestos, movimientos (entradas/salidas), proveedores y kardex</p>
+    </div>
+
+    <span class="inv-badge">Panel interno</span>
+  </div>
+
+  <div class="inv-nav">
+    <a class="inv-tab" routerLink="repuestos" routerLinkActive="active">Repuestos</a>
+    <a class="inv-tab" routerLink="entradas" routerLinkActive="active">Entradas</a>
+    <a class="inv-tab" routerLink="salidas" routerLinkActive="active">Salidas</a>
+    <a class="inv-tab" routerLink="proveedores" routerLinkActive="active">Proveedores</a>
+    <a class="inv-tab" routerLink="kardex" routerLinkActive="active">Kardex</a>
+  </div>
+
+  <div class="inv-content">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

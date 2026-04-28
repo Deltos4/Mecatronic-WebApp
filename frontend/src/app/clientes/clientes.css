@@ -1,0 +1,21 @@
+table {
+  border-collapse: collapse;
+  margin-top: 10px;
+  background-color: #ffffff;
+}
+
+th,
+td {
+  border: 1px solid #999999;
+  padding: 6px 10px;
+}
+
+th {
+  background-color: #1b3b6f;
+  color: #ffffff;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f0f0f0;
+}

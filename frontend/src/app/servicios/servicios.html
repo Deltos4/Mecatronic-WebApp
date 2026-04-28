@@ -1,0 +1,118 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+  <h3>Servicios y reparaciones</h3>
+  <p class="text-muted">Registra los servicios del taller, su costo y estado.</p>
+
+  <!-- FORMULARIO -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      {{ editingId !== null ? 'Editar servicio' : 'Registrar nuevo servicio' }}
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardar()" class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label">Nombre del servicio <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 [(ngModel)]="form.nombre_servicio" name="nombre_servicio"
+                 placeholder="Ej: Cambio de aceite" maxlength="150" required>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Precio (S/) <span class="text-danger">*</span></label>
+          <div class="input-group">
+            <span class="input-group-text">S/</span>
+            <input type="number" class="form-control"
+                   [(ngModel)]="form.precio_servicio" name="precio_servicio"
+                   placeholder="0.00" min="0" max="99999" step="0.01" required>
+          </div>
+          <div class="form-text text-muted">Precio en soles peruanos.</div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Duración estimada</label>
+          <div class="input-group">
+            <input type="number" class="form-control"
+                   [(ngModel)]="form.duracion_servicio" name="duracion_servicio"
+                   placeholder="30" min="5" max="480">
+            <span class="input-group-text">min</span>
+          </div>
+          <div class="form-text text-muted">Entre 5 y 480 minutos.</div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Estado</label>
+          <select class="form-select" [(ngModel)]="form.estado_servicio" name="estado_servicio">
+            <option [ngValue]="true">✅ Activo</option>
+            <option [ngValue]="false">❌ Inactivo</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">URL de imagen (opcional)</label>
+          <input type="url" class="form-control"
+                 [(ngModel)]="form.imagen_url" name="imagen_url"
+                 placeholder="https://...">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Descripción</label>
+          <textarea class="form-control" rows="2"
+                    [(ngModel)]="form.descripcion_servicio" name="descripcion_servicio"
+                    placeholder="Describe brevemente el servicio..." maxlength="500"></textarea>
+        </div>
+
+        <div class="col-12 text-end">
+          <button type="button" class="btn btn-secondary me-2"
+                  *ngIf="editingId !== null" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn btn-success">
+            {{ editingId !== null ? 'Guardar cambios' : 'Agregar servicio' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- CARGA / ERROR -->
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- TABLA -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">Lista de servicios</div>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th><th>Nombre</th><th>Descripción</th>
+            <th>Precio (S/)</th><th>Duración</th><th>Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of servicios">
+            <td>{{ s.id_servicio }}</td>
+            <td>{{ s.nombre_servicio }}</td>
+            <td>{{ s.descripcion_servicio || '—' }}</td>
+            <td>S/ {{ s.precio_servicio | number:'1.2-2' }}</td>
+            <td>{{ s.duracion_servicio ? s.duracion_servicio + ' min' : '—' }}</td>
+            <td>
+              <span class="badge" [ngClass]="s.estado_servicio ? 'bg-success' : 'bg-secondary'">
+                {{ s.estado_servicio ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-primary me-1" (click)="editar(s)">Editar</button>
+              <button class="btn btn-sm btn-danger" (click)="eliminar(s.id_servicio)">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="servicios.length === 0 && !cargando">
+            <td colspan="7" class="text-center text-muted py-3">No hay servicios registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

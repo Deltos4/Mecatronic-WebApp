@@ -1,0 +1,84 @@
+<div class="myservices-page">
+
+  <div class="myservices-header">
+    <div>
+      <h2 class="title">Mis servicios</h2>
+      <p class="subtitle">
+        Aquí podrás ver los servicios que has solicitado para tu vehículo,
+        las citas programadas y el estado de cada atención en el taller.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <span class="count-badge">{{ citas.length }} total</span>
+    </div>
+  </div>
+
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Cargando servicios...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- Mensaje cuando no hay servicios -->
+  <div *ngIf="!cargando && citas.length === 0 && !error" class="empty-card">
+    <div class="empty-icon">🛠️</div>
+    <div>
+      <h5 class="mb-1">Aún no tienes servicios registrados</h5>
+      <p class="text-muted mb-0">
+        Cuando programes un servicio o reserves una cita en el taller,
+        aparecerá aquí el estado de tu atención.
+      </p>
+    </div>
+  </div>
+
+  <!-- Lista de servicios -->
+  <div *ngFor="let c of citas" class="service-card">
+
+    <div class="service-top">
+      <div class="service-name">
+        <div class="dot"></div>
+        <div class="name-block">
+          <div class="name">{{ c.servicioNombre || 'Servicio no especificado' }}</div>
+          <div class="date">Fecha del servicio: {{ formatearFecha(c.fechaISO) }}</div>
+        </div>
+      </div>
+
+      <span class="status-badge" [ngClass]="{
+        'st-pendiente': c.estado === 'Pendiente',
+        'st-confirmada': c.estado === 'Confirmada',
+        'st-atendida': c.estado === 'Atendida' || c.estado === 'Completada',
+        'st-cancelada': c.estado === 'Cancelada'
+      }">
+        {{ c.estado }}
+      </span>
+    </div>
+
+    <div class="chips">
+      <span class="chip" *ngIf="c.placa">🚗 Placa: {{ c.placa }}</span>
+      <span class="chip" *ngIf="c.categoria">🏷️ {{ c.categoria }}</span>
+      <span class="chip" *ngIf="c.duracion">⏱️ {{ c.duracion }}</span>
+    </div>
+
+    <div class="details">
+      <div *ngIf="c.telefono"><strong>Teléfono:</strong> {{ c.telefono }}</div>
+      <div *ngIf="c.comentario"><strong>Detalle:</strong> {{ c.comentario }}</div>
+      <div class="price" *ngIf="c.precio != null">
+        S/ {{ c.precio | number:'1.2-2' }}
+      </div>
+    </div>
+
+    <div class="actions">
+      <button *ngIf="c.estado === 'Pendiente' || c.estado === 'Confirmada'"
+              class="btn btn-outline-danger btn-sm" (click)="cancelarCita(c.id)">
+        Cancelar
+      </button>
+      <span *ngIf="c.estado === 'Atendida' || c.estado === 'Completada'"
+            class="text-success small fw-semibold">Servicio completado</span>
+      <span *ngIf="c.estado === 'Cancelada'"
+            class="text-muted small">Ya cancelada</span>
+    </div>
+  </div>
+</div>

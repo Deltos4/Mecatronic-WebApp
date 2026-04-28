@@ -1,0 +1,207 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+  <h3>Órdenes de servicio</h3>
+  <p class="text-muted">Gestiona las órdenes de trabajo del taller.</p>
+
+  <!-- FORMULARIO -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      {{ editingId !== null ? 'Editar orden' : 'Nueva orden de servicio' }}
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardar()" class="row g-3">
+
+        <div class="col-md-4">
+          <label class="form-label">Cliente <span class="text-danger">*</span></label>
+          <select
+            class="form-select"
+            [(ngModel)]="form.id_cliente"
+            name="id_cliente"
+            (ngModelChange)="onClienteChange()"
+          >
+            <option [ngValue]="null">Seleccione un cliente</option>
+            <option *ngFor="let c of clientes" [ngValue]="c.id_cliente">
+              {{ c.nombre_cliente }} {{ c.apellido_cliente }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Vehículo <span class="text-danger">*</span></label>
+          <select
+            class="form-select"
+            [(ngModel)]="form.id_vehiculo"
+            name="id_vehiculo"
+          >
+            <option [ngValue]="null">Seleccione un vehículo</option>
+            <option *ngFor="let v of vehiculosFiltrados" [ngValue]="v.id_vehiculo">
+              {{ v.placa_vehiculo }} — {{ v.nombre_marca_vehiculo ?? '' }} {{ v.nombre_modelo_vehiculo ?? '' }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Técnico <span class="text-danger">*</span></label>
+          <select
+            class="form-select"
+            [(ngModel)]="form.id_tecnico"
+            name="id_tecnico"
+          >
+            <option [ngValue]="null">Seleccione un técnico</option>
+            <option *ngFor="let t of tecnicos" [ngValue]="t.id_tecnico">
+              {{ t.nombre_empleado }} {{ t.apellido_empleado }} — {{ t.cargo_empleado }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Fecha inicio <span class="text-danger">*</span></label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="form.fecha_inicio"
+            name="fecha_inicio"
+          >
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Fecha fin</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="form.fecha_fin"
+            name="fecha_fin"
+          >
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Estado</label>
+          <select
+            class="form-select"
+            [(ngModel)]="form.estado"
+            name="estado"
+          >
+            <option value="Pendiente">Pendiente</option>
+            <option value="En proceso">En proceso</option>
+            <option value="Completado">Completado</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Total (S/)</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="form.total"
+            name="total"
+            min="0"
+            step="0.01"
+          >
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Observaciones</label>
+          <textarea
+            class="form-control"
+            [(ngModel)]="form.observaciones"
+            name="observaciones"
+            rows="2"
+            placeholder="Observaciones de la orden..."
+          ></textarea>
+        </div>
+
+        <div class="col-12 text-end">
+          <button
+            type="button"
+            class="btn btn-secondary me-2"
+            *ngIf="editingId !== null"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success">
+            {{ editingId !== null ? 'Guardar cambios' : 'Crear orden' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="row g-2 mb-3">
+    <div class="col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="filtroTexto"
+        placeholder="Buscar por cliente, placa, técnico o ID..."
+      >
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="filtroEstado">
+        <option value="">Todos los estados</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Completado">Completado</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- TABLA -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">Lista de órdenes</div>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Vehículo</th>
+            <th>Técnico</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of ordenesFiltradas">
+            <td>{{ o.id_orden_servicio }}</td>
+            <td>{{ o.nombre_cliente ? o.nombre_cliente + ' ' + (o.apellido_cliente ?? '') : getNombreCliente(o.id_cliente) }}</td>
+            <td>{{ o.placa_vehiculo ?? getPlacaVehiculo(o.id_vehiculo) }}</td>
+            <td>{{ o.nombre_tecnico ? o.nombre_tecnico + ' ' + (o.apellido_tecnico ?? '') : getNombreTecnico(o.id_tecnico) }}</td>
+            <td>{{ o.fecha_inicio | date:'shortDate' }}</td>
+            <td>{{ o.fecha_fin ? (o.fecha_fin | date:'shortDate') : '—' }}</td>
+            <td>S/ {{ (o.total) | number:'1.2-2' }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-secondary': o.estado === 'Pendiente',
+                  'bg-warning text-dark': o.estado === 'En proceso',
+                  'bg-success': o.estado === 'Completado'
+                }"
+              >
+                {{ o.estado }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-primary me-1" (click)="editar(o)">Editar</button>
+              <button class="btn btn-sm btn-danger" (click)="eliminar(o.id_orden_servicio)">Eliminar</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="ordenesFiltradas.length === 0 && !cargando">
+            <td colspan="9" class="text-center text-muted py-3">No hay órdenes registradas.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

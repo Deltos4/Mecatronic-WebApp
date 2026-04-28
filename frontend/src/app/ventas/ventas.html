@@ -1,0 +1,58 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+  <h3>Registro de ventas</h3>
+  <p class="text-muted">Historial de ventas, pedidos y comprobantes del taller.</p>
+
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover mb-0">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Fecha</th>
+          <th>Origen</th>
+          <th>Total (S/)</th>
+          <th>Comprobante</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let v of ventas">
+          <td>{{ v.id_pedido }}</td>
+          <td>
+            {{ v.nombre_cliente ? v.nombre_cliente + ' ' + (v.apellido_cliente ?? '') : ('#' + v.id_cliente) }}
+          </td>
+          <td>{{ v.fecha_pedido | date:'short' }}</td>
+          <td>{{ v.origen_venta ?? '—' }}</td>
+          <td>S/ {{ (v.total_pedido) | number:'1.2-2' }}</td>
+          <td>{{ v.tipo_comprobante ?? '—' }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-secondary': v.estado_pedido === 'Pendiente',
+                'bg-warning text-dark': v.estado_pedido === 'En proceso',
+                'bg-success': v.estado_pedido === 'Completado' || v.estado_pedido === 'Pagado'
+              }"
+            >
+              {{ v.estado_pedido || '—' }}
+            </span>
+          </td>
+        </tr>
+
+        <tr *ngIf="ventas.length === 0 && !cargando">
+          <td colspan="7" class="text-center text-muted py-3">
+            No hay ventas registradas.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

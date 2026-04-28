@@ -1,0 +1,195 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+
+  <!-- ENCABEZADO -->
+  <div class="text-center mb-4">
+    <h3>Reservar una cita</h3>
+    <p class="text-muted">Elige un servicio, selecciona fecha y hora, y confirma tu reserva.</p>
+
+    <!-- Pasos visuales -->
+    <div class="d-flex justify-content-center gap-2 mb-3">
+      <span class="badge" [ngClass]="paso >= 0 ? 'bg-primary' : 'bg-secondary'">1. Servicio</span>
+      <span class="badge" [ngClass]="paso >= 1 ? 'bg-primary' : 'bg-secondary'">2. Fecha</span>
+      <span class="badge" [ngClass]="paso >= 2 ? 'bg-primary' : 'bg-secondary'">3. Hora</span>
+      <span class="badge" [ngClass]="paso >= 3 ? 'bg-primary' : 'bg-secondary'">4. Datos</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ PASO 0: ELEGIR SERVICIO ═══════════ -->
+  <div *ngIf="paso === 0">
+    <h5 class="mb-3">¿Qué servicio necesitas?</h5>
+
+    <div *ngIf="cargando" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-muted">Cargando servicios...</p>
+    </div>
+
+    <div *ngIf="!cargando && serviciosDisponibles.length === 0" class="text-center text-muted py-4">
+      <p>No hay servicios disponibles. <a routerLink="/catalogo">Volver al catálogo</a></p>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6 col-lg-4" *ngFor="let s of serviciosDisponibles">
+        <div class="card h-100 shadow-sm servicio-card" style="cursor:pointer;" (click)="elegirServicio(s)">
+          <div class="card-body">
+            <h6 class="fw-bold mb-1">{{ s.nombre_servicio }}</h6>
+            <p class="text-muted small mb-2">{{ s.descripcion_servicio }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold text-primary">S/ {{ s.precio_servicio | number:'1.2-2' }}</span>
+              <span class="text-muted small" *ngIf="s.duracion_servicio">
+                {{ s.duracion_servicio }} min
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-secondary" (click)="volverCatalogo()">Volver al catálogo</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ PASO 1: CALENDARIO ═══════════ -->
+  <div *ngIf="paso === 1">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <button class="btn btn-sm btn-outline-secondary" (click)="volverPaso(0)">← Cambiar servicio</button>
+      <div class="text-end">
+        <span class="badge bg-info">{{ servicioSeleccionado?.nombre_servicio }}</span>
+        <span class="badge bg-success ms-1" *ngIf="servicioSeleccionado?.precio_servicio">
+          S/ {{ servicioSeleccionado.precio_servicio | number:'1.2-2' }}
+        </span>
+      </div>
+    </div>
+
+    <h5 class="text-center mb-3">Selecciona una fecha</h5>
+
+    <!-- Navegación mes -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button class="btn btn-sm btn-outline-primary" (click)="mesAnterior()">◀ Anterior</button>
+      <h5 class="mb-0 fw-bold">{{ meses[mesActual.getMonth()] }} {{ mesActual.getFullYear() }}</h5>
+      <button class="btn btn-sm btn-outline-primary" (click)="mesSiguiente()">Siguiente ▶</button>
+    </div>
+
+    <!-- Calendario -->
+    <table class="table table-borderless text-center calendario">
+      <thead>
+        <tr>
+          <th *ngFor="let d of diasSemana" class="text-muted small">{{ d }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let semana of semanas">
+          <td *ngFor="let dia of semana"
+              [class.dia-vacio]="!dia"
+              [class.dia-pasado]="dia && (esPasado(dia) || esDomingo(dia))"
+              [class.dia-seleccionado]="dia && esDiaSeleccionado(dia)"
+              [class.dia-hoy]="dia && esHoy(dia)"
+              [class.dia-disponible]="dia && !esPasado(dia) && !esDomingo(dia)"
+              (click)="dia && seleccionarDia(dia)">
+            {{ dia?.getDate() ?? '' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="d-flex gap-3 justify-content-center small text-muted mt-2">
+      <span><span class="badge bg-primary">&nbsp;</span> Seleccionado</span>
+      <span><span class="badge bg-warning text-dark">&nbsp;</span> Hoy</span>
+      <span style="text-decoration: line-through;">Dom / Pasado</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ PASO 2: HORARIOS ═══════════ -->
+  <div *ngIf="paso === 2">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button class="btn btn-sm btn-outline-secondary" (click)="volverPaso(1)">← Cambiar fecha</button>
+      <span class="badge bg-info">{{ fechaFormateada }}</span>
+    </div>
+
+    <h5 class="text-center mb-3">Selecciona un horario</h5>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <button *ngFor="let h of horariosDisponibles"
+              class="btn btn-sm"
+              [ngClass]="horaSeleccionada === h ? 'btn-primary' : 'btn-outline-primary'"
+              (click)="seleccionarHora(h)">
+        {{ h }}
+      </button>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-success btn-lg" (click)="continuarADatos()" [disabled]="!horaSeleccionada">
+        Continuar →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ PASO 3: DATOS DEL CLIENTE ═══════════ -->
+  <div *ngIf="paso === 3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button class="btn btn-sm btn-outline-secondary" (click)="volverPaso(2)">← Cambiar hora</button>
+    </div>
+
+    <h5 class="text-center mb-3">Confirma tus datos</h5>
+
+    <!-- Resumen -->
+    <div class="card bg-light mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6"><strong>Servicio:</strong></div>
+          <div class="col-6">{{ servicioSeleccionado?.nombre_servicio }}</div>
+          <div class="col-6"><strong>Precio ref.:</strong></div>
+          <div class="col-6">S/ {{ servicioSeleccionado?.precio_servicio | number:'1.2-2' }}</div>
+          <div class="col-6"><strong>Fecha:</strong></div>
+          <div class="col-6">{{ fechaFormateada }}</div>
+          <div class="col-6"><strong>Hora:</strong></div>
+          <div class="col-6">{{ horaSeleccionada }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Nombre <span class="text-danger">*</span></label>
+        <input class="form-control" [(ngModel)]="nombreCliente">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Celular</label>
+        <input class="form-control" [(ngModel)]="telefono" placeholder="9 dígitos" maxlength="9">
+        <small class="form-text text-muted">Opcional. 9 dígitos, empieza con 9.</small>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Placa del vehículo</label>
+        <input class="form-control" [(ngModel)]="placa" placeholder="Ej: ABC-123"
+               style="text-transform: uppercase;" maxlength="7">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Comentario</label>
+        <input class="form-control" [(ngModel)]="comentario" placeholder="Ej: Ruido en el motor al frenar">
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-success btn-lg" (click)="confirmarCita()" [disabled]="cargando">
+        {{ cargando ? 'Reservando...' : 'Confirmar cita' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ PASO 4: CONFIRMADO ═══════════ -->
+  <div *ngIf="paso === 4" class="text-center py-4">
+    <div style="font-size: 64px;">✅</div>
+    <h3 class="mt-3 text-success">¡Cita reservada!</h3>
+    <p class="text-muted">
+      Tu cita para <strong>{{ servicioSeleccionado?.nombre_servicio }}</strong> ha sido registrada
+      para el <strong>{{ fechaFormateada }}</strong> a las <strong>{{ horaSeleccionada }}</strong>.
+    </p>
+    <p class="text-muted">Te notificaremos cuando sea confirmada por nuestro equipo.</p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <button class="btn btn-primary" (click)="irAMisCitas()">Ver mis servicios</button>
+      <button class="btn btn-outline-secondary" (click)="volverCatalogo()">Volver al catálogo</button>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,167 @@
+.citas-page {
+  max-width: 680px;
+  margin: 24px auto;
+  padding: 0 16px 40px;
+}
+
+/* Servicio header */
+.servicio-header {
+  background: #f8f9fa;
+  border-radius: 14px;
+  padding: 16px;
+}
+.servicio-icon-box {
+  font-size: 28px;
+  background: white;
+  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  flex-shrink: 0;
+}
+
+/* ── Pasos ── */
+.pasos-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.paso-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.paso-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #e9ecef;
+  color: #adb5bd;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; font-size: 14px;
+  transition: all .2s;
+}
+.paso-label { font-size: 11px; color: #adb5bd; font-weight: 600; }
+.paso-item.activo .paso-num   { background: #0d6efd; color: white; }
+.paso-item.activo .paso-label { color: #0d6efd; }
+.paso-item.completado .paso-num   { background: #198754; color: white; }
+.paso-item.completado .paso-label { color: #198754; }
+.paso-linea {
+  height: 2px; width: 56px;
+  background: #e9ecef;
+  margin-bottom: 18px;
+  transition: background .2s;
+}
+.paso-linea.activo { background: #198754; }
+
+/* Servicio cards */
+.servicio-card:hover {
+  border-color: #0d6efd;
+  transform: translateY(-2px);
+  transition: all 0.2s;
+}
+
+/* Calendario table */
+.calendario td {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: default;
+  transition: all 0.15s;
+}
+.dia-vacio { }
+.dia-disponible { cursor: pointer !important; color: #1a1a2e; }
+.dia-disponible:hover { background: #e7f1ff; }
+.dia-pasado { color: #dee2e6 !important; cursor: not-allowed !important; }
+.dia-hoy { border: 2px solid #0d6efd; color: #0d6efd; font-weight: 900; }
+.dia-seleccionado { background: #0d6efd !important; color: #fff !important; border-radius: 10px; }
+
+/* ── Calendario grid (legacy) ── */
+.calendario-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 2px;
+}
+.dia-semana {
+  text-align: center;
+  font-size: 12px; font-weight: 700;
+  color: #6c757d;
+  padding: 8px 0;
+}
+.dia-celda {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  font-size: 14px; font-weight: 600;
+  cursor: default;
+  transition: all .15s;
+  border: 2px solid transparent;
+  user-select: none;
+}
+.dia-celda.disponible {
+  cursor: pointer;
+  color: #1a1a2e;
+}
+.dia-celda.disponible:hover {
+  background: #e7f1ff;
+  border-color: #0d6efd;
+}
+.dia-celda.pasado  { color: #dee2e6; cursor: not-allowed; }
+.dia-celda.domingo { color: #e67e22; background: #fff8e1; cursor: not-allowed; }
+.dia-celda.hoy     { border-color: #0d6efd; color: #0d6efd; font-weight: 900; }
+.dia-celda.seleccionado {
+  background: #0d6efd !important;
+  color: white !important;
+  border-color: #0d6efd !important;
+}
+
+/* Leyenda */
+.leyenda {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: #6c757d;
+}
+.dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.disponible-dot { background: #0d6efd; }
+.pasado-dot     { background: #dee2e6; }
+.domingo-dot    { background: #e67e22; }
+
+/* ── Horarios ── */
+.fecha-seleccionada {
+  background: #e7f1ff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-weight: 600; color: #0d6efd;
+}
+.horarios-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.horario-btn {
+  padding: 12px 8px;
+  font-weight: 600;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+/* ── Resumen ── */
+.resumen-cita {
+  background: #f8f9fa;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.resumen-item {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px;
+}
+.resumen-icon { font-size: 20px; }

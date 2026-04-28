@@ -1,0 +1,157 @@
+<div class="inv-page">
+
+  <div class="inv-head">
+    <div>
+      <h2 class="mb-1">Entradas</h2>
+      <div class="text-muted">Ingreso de stock (compra, devolución, ajuste).</div>
+    </div>
+    <button class="btn btn-primary" (click)="toggleForm()">
+      {{ showForm ? 'Cerrar' : '+ Registrar entrada' }}
+    </button>
+  </div>
+
+  <!-- FORM -->
+  <div *ngIf="showForm" class="card p-3 shadow-sm mt-3">
+    <h5 class="mb-3">Registrar entrada</h5>
+    <div class="row g-3 align-items-end">
+
+      <div class="col-md-4">
+        <label class="form-label">Repuesto *</label>
+        <select class="form-select" [(ngModel)]="form.repuestoId" name="repuestoId">
+          <option [ngValue]="null">-- Selecciona --</option>
+          <option *ngFor="let r of repuestos" [ngValue]="r.id_producto">
+            {{ r.nombre_producto }} (Stock: {{ r.stock_producto }})
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">Cantidad *</label>
+        <input
+          type="number"
+          class="form-control"
+          min="1"
+          [(ngModel)]="form.cantidad"
+          name="cantidad"
+        >
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Motivo *</label>
+        <select
+          class="form-select"
+          [(ngModel)]="form.motivo"
+          name="motivo"
+          (ngModelChange)="onMotivoChange()"
+        >
+          <option value="Compra">Compra</option>
+          <option value="Devolución">Devolución</option>
+          <option value="Ajuste">Ajuste</option>
+        </select>
+      </div>
+
+      <div class="col-md-3" *ngIf="form.motivo === 'Compra'">
+        <label class="form-label">Costo unitario (S/)</label>
+        <input
+          type="number"
+          class="form-control"
+          min="0"
+          step="0.01"
+          [(ngModel)]="form.costoUnitario"
+          name="costoUnitario"
+        >
+      </div>
+
+      <div class="col-md-4" *ngIf="form.motivo === 'Compra'">
+        <label class="form-label">Proveedor</label>
+        <select class="form-select" [(ngModel)]="form.proveedorId" name="proveedorId">
+          <option [ngValue]="null">-- Opcional --</option>
+          <option *ngFor="let p of proveedores" [ngValue]="p.id_proveedor">
+            {{ p.nombre_proveedor }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-8">
+        <label class="form-label">Observación</label>
+        <input
+          class="form-control"
+          [(ngModel)]="form.observacion"
+          name="observacion"
+          placeholder="Opcional"
+        >
+      </div>
+
+      <div class="col-md-12 d-grid">
+        <button class="btn btn-success" (click)="guardarEntrada()">
+          Guardar entrada
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="card p-3 shadow-sm mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">Historial de entradas</h5>
+      <small class="text-muted">{{ entradas.length }} registro(s)</small>
+    </div>
+
+    <div *ngIf="entradas.length === 0 && !cargando" class="alert alert-info mb-0">
+      Aún no hay entradas registradas.
+    </div>
+
+    <div class="table-responsive" *ngIf="entradas.length > 0">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Repuesto</th>
+            <th class="text-end">Cantidad</th>
+            <th>Motivo</th>
+            <th>Proveedor</th>
+            <th>Obs.</th>
+            <th class="text-end">Costo</th>
+            <th class="text-end">Total</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of entradas">
+            <td>{{ formatDate(e.fechaISO ?? e.fecha_registro ?? '') }}</td>
+            <td>{{ e.repuestoNombre ?? e.nombre_producto }}</td>
+            <td class="text-end">
+              <span class="badge text-bg-success">+{{ e.cantidad }}</span>
+            </td>
+            <td>{{ e.motivo }}</td>
+            <td>{{ e.proveedorNombre ?? e.nombre_proveedor ?? '—' }}</td>
+            <td class="text-muted">{{ e.observacion ?? '—' }}</td>
+            <td class="text-end">
+              {{ (e.costoUnitario ?? 0) | currency:'PEN':'symbol':'1.2-2' }}
+            </td>
+            <td class="text-end">
+              {{ (e.total ?? 0) | currency:'PEN':'symbol':'1.2-2' }}
+            </td>
+            <td class="text-end">
+              <button
+                class="btn btn-outline-danger btn-sm"
+                [disabled]="!(e.id ?? e.id_entrada)"
+                (click)="eliminarEntrada((e.id ?? e.id_entrada)!)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

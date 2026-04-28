@@ -1,0 +1,185 @@
+.proforma-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-bottom: 30px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.muted {
+  color: #666;
+  margin-top: -4px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-control {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.small-input {
+  min-width: 90px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-dark {
+  background: #343a40;
+  color: #fff;
+}
+
+.btn-primary {
+  background: #0d6efd;
+  color: #fff;
+}
+
+.btn-success {
+  background: #198754;
+  color: #fff;
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: #222;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: #fff;
+}
+
+.btn-accept {
+  background: #6f42c1;
+  color: #fff;
+}
+
+.btn-generate {
+  background: #20c997;
+  color: #fff;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.tabla th,
+.tabla td {
+  border: 1px solid #e5e5e5;
+  padding: 10px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.tabla thead {
+  background: #212529;
+  color: #fff;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+}
+
+.summary {
+  display: grid;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.total {
+  font-size: 20px;
+  color: #0d6efd;
+}
+
+.alert-warning-box {
+  background: #fff3cd;
+  color: #664d03;
+  border: 1px solid #ffecb5;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.accepted-box {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.badge-ok,
+.badge-no {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-ok {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.badge-no {
+  background: #f8d7da;
+  color: #842029;
+}
+
+@media (max-width: 900px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}

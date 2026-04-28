@@ -1,0 +1,174 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+  <h3>Vehículos registrados</h3>
+  <p class="text-muted">
+    Administra los vehículos asociados a los clientes del taller.
+  </p>
+
+  <!-- FORMULARIO -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      {{ editingId !== null ? 'Editar vehículo' : 'Registrar nuevo vehículo' }}
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardar()" class="row g-3">
+
+        <div class="col-md-4">
+          <label class="form-label">Placa</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="form.placa_vehiculo"
+            name="placa_vehiculo"
+            required
+          >
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Año</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="form.anio_vehiculo"
+            name="anio_vehiculo"
+            min="1900"
+          >
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Color</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="form.color_vehiculo"
+            name="color_vehiculo"
+          >
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Cliente</label>
+          <select
+            class="form-select"
+            [(ngModel)]="form.id_cliente"
+            name="id_cliente"
+            required
+          >
+            <option [ngValue]="null">-- Selecciona un cliente --</option>
+            <option *ngFor="let c of clientes" [ngValue]="c.id_cliente">
+              {{ c.nombre_cliente }} {{ c.apellido_cliente || '' }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Modelo</label>
+          <select
+            class="form-select"
+            [(ngModel)]="form.id_modelo_vehiculo"
+            name="id_modelo_vehiculo"
+          >
+            <option [ngValue]="null">-- Selecciona un modelo --</option>
+            <option *ngFor="let m of modelos" [ngValue]="m.id_modelo_vehiculo">
+              {{ m.nombre_modelo_vehiculo }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-12 text-end">
+          <button
+            type="button"
+            class="btn btn-secondary me-2"
+            *ngIf="editingId !== null"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn btn-success">
+            {{ editingId !== null ? 'Guardar cambios' : 'Agregar vehículo' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- CARGA -->
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <!-- ERROR -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- TABLA -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      Lista de vehículos
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Placa</th>
+            <th>Cliente</th>
+            <th>Año</th>
+            <th>Color</th>
+            <th>Modelo</th>
+            <th>Marca</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let v of vehiculos">
+            <td>{{ v.id_vehiculo }}</td>
+            <td>{{ v.placa_vehiculo }}</td>
+            <td>{{ v.nombre_cliente }}</td>
+            <td>{{ v.anio_vehiculo }}</td>
+            <td>{{ v.color_vehiculo }}</td>
+            <td>{{ v.nombre_modelo_vehiculo }}</td>
+            <td>{{ v.nombre_marca_vehiculo }}</td>
+            <td>{{ v.nombre_tipo_vehiculo }}</td>
+            <td>
+              <span
+                class="badge"
+                [ngClass]="v.estado_vehiculo ? 'bg-success' : 'bg-secondary'"
+              >
+                {{ v.estado_vehiculo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button
+                class="btn btn-sm btn-primary me-1"
+                (click)="editar(v)"
+              >
+                Editar
+              </button>
+
+              <button
+                class="btn btn-sm btn-danger"
+                (click)="eliminar(v.id_vehiculo)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="vehiculos.length === 0 && !cargando">
+            <td colspan="10" class="text-center text-muted py-3">
+              No hay vehículos registrados.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

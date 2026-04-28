@@ -1,0 +1,133 @@
+<div class="inv-page">
+
+  <div class="inv-head">
+    <div>
+      <h2 class="mb-1">Salidas</h2>
+      <div class="text-muted">Salida por venta, servicio, merma o ajuste.</div>
+    </div>
+    <button class="btn btn-primary" (click)="toggleForm()">
+      {{ showForm ? 'Cerrar' : '+ Registrar salida' }}
+    </button>
+  </div>
+
+  <!-- FORM -->
+  <div *ngIf="showForm" class="card p-3 shadow-sm mt-3">
+    <h5 class="mb-3">Registrar salida</h5>
+    <div class="row g-3 align-items-end">
+
+      <div class="col-md-4">
+        <label class="form-label">Repuesto *</label>
+        <select class="form-select" [(ngModel)]="form.repuestoId" name="repuestoId">
+          <option [ngValue]="null">-- Selecciona --</option>
+          <option *ngFor="let r of repuestos" [ngValue]="r.id_producto">
+            {{ r.nombre_producto }} (Stock: {{ r.stock_producto }})
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">Cantidad *</label>
+        <input
+          type="number"
+          class="form-control"
+          min="1"
+          [(ngModel)]="form.cantidad"
+          name="cantidad"
+        >
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Motivo *</label>
+        <select class="form-select" [(ngModel)]="form.motivo" name="motivo">
+          <option value="Venta">Venta</option>
+          <option value="Servicio">Servicio</option>
+          <option value="Merma">Merma</option>
+          <option value="Ajuste">Ajuste</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Referencia</label>
+        <input
+          class="form-control"
+          [(ngModel)]="form.referencia"
+          name="referencia"
+          placeholder="Ej: Orden/Boleta/Servicio (opcional)"
+        >
+      </div>
+
+      <div class="col-md-9">
+        <label class="form-label">Observación</label>
+        <input
+          class="form-control"
+          [(ngModel)]="form.observacion"
+          name="observacion"
+          placeholder="Opcional"
+        >
+      </div>
+
+      <div class="col-md-3 d-grid">
+        <button class="btn btn-success" (click)="guardarSalida()">
+          Guardar salida
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="card p-3 shadow-sm mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">Historial de salidas</h5>
+      <small class="text-muted">{{ salidas.length }} registro(s)</small>
+    </div>
+
+    <div *ngIf="salidas.length === 0 && !cargando" class="alert alert-info mb-0">
+      Aún no hay salidas registradas.
+    </div>
+
+    <div class="table-responsive" *ngIf="salidas.length > 0">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Repuesto</th>
+            <th class="text-end">Cantidad</th>
+            <th>Motivo</th>
+            <th>Referencia</th>
+            <th>Obs.</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of salidas">
+            <td>{{ formatDate(s.fechaISO ?? s.fecha_registro ?? '') }}</td>
+            <td>{{ s.repuestoNombre ?? s.nombre_producto }}</td>
+            <td class="text-end">
+              <span class="badge text-bg-danger">-{{ s.cantidad }}</span>
+            </td>
+            <td>{{ s.motivo }}</td>
+            <td class="text-muted">{{ s.referencia ?? '—' }}</td>
+            <td class="text-muted">{{ s.observacion ?? '—' }}</td>
+            <td class="text-end">
+              <button
+                class="btn btn-outline-danger btn-sm"
+                (click)="eliminarSalida((s.id ?? s.id_salida)!)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

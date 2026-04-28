@@ -1,0 +1,100 @@
+<div class="login-page">
+  <div class="container" style="max-width: 600px;">
+
+    <div class="card shadow-sm mb-4 border-0" style="border-radius:14px;">
+      <div class="card-body p-4 text-center">
+        <h2 class="mb-2 fw-semibold">Crear cuenta</h2>
+        <p class="text-muted mb-0">Regístrate para reservar citas, ver tu historial y gestionar tus pedidos.</p>
+      </div>
+    </div>
+
+    <div class="card shadow border-0 login-card" style="border-radius:14px;">
+      <div class="card-body p-4">
+        <form (ngSubmit)="registrar()">
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre <span class="text-danger">*</span></label>
+              <input type="text" class="form-control"
+                     [(ngModel)]="nombre" name="nombre"
+                     placeholder="Ej: Juan"
+                     pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" minlength="2" maxlength="100" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Apellido <span class="text-danger">*</span></label>
+              <input type="text" class="form-control"
+                     [(ngModel)]="apellido" name="apellido"
+                     placeholder="Ej: Pérez García"
+                     pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" minlength="2" maxlength="100" required>
+            </div>
+            <div class="form-text text-muted col-12">Solo letras.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Correo electrónico <span class="text-danger">*</span></label>
+            <input type="email" class="form-control"
+                   [(ngModel)]="correo" name="correo"
+                   placeholder="ejemplo@correo.com" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Celular</label>
+            <div class="input-group">
+              <span class="input-group-text">🇵🇪 +51</span>
+              <input type="text" class="form-control"
+                     [(ngModel)]="telefono" name="telefono"
+                     placeholder="9XXXXXXXX"
+                     pattern="9[0-9]{8}" maxlength="9">
+            </div>
+            <div class="form-text text-muted">Opcional. 9 dígitos, empieza con 9.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contraseña <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input [type]="verPass ? 'text' : 'password'" class="form-control"
+                     [(ngModel)]="password" name="password"
+                     placeholder="Mínimo 8 caracteres" minlength="8" required>
+              <button type="button" class="btn btn-outline-secondary" (click)="verPass = !verPass">
+                {{ verPass ? '🙈' : '👁️' }}
+              </button>
+            </div>
+            <div class="form-text">
+              La contraseña debe tener:
+              <span [style.color]="password.length >= 8 ? 'green' : 'gray'"> ✔ Mín. 8 caracteres</span> &nbsp;
+              <span [style.color]="tieneMayuscula ? 'green' : 'gray'"> ✔ Mayúscula</span> &nbsp;
+              <span [style.color]="tieneNumero ? 'green' : 'gray'"> ✔ Número</span> &nbsp;
+              <span [style.color]="tieneEspecial ? 'green' : 'gray'"> ✔ Car. especial</span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Confirmar contraseña <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <input [type]="verPass2 ? 'text' : 'password'" class="form-control"
+                     [(ngModel)]="password2" name="password2"
+                     placeholder="Repite tu contraseña" minlength="8" required>
+              <button type="button" class="btn btn-outline-secondary" (click)="verPass2 = !verPass2">
+                {{ verPass2 ? '🙈' : '👁️' }}
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger py-2">{{ errorMessage }}</div>
+          <div *ngIf="okMessage"    class="alert alert-success py-2">{{ okMessage }}</div>
+
+          <button type="submit" class="btn btn-primary w-100" [disabled]="cargando">
+            {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
+          </button>
+
+        </form>
+
+        <hr>
+        <div class="text-center">
+          <a routerLink="/login" class="text-decoration-none">¿Ya tienes cuenta? Inicia sesión</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

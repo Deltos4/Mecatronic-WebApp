@@ -1,0 +1,14 @@
+.profile-shell{
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.form-label{
+  font-size: .85rem;
+  color: #6c757d;
+  margin-bottom: 6px;
+}
+
+.form-control{
+  border-radius: 12px;
+}

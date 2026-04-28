@@ -1,0 +1,176 @@
+.myservices-page{
+  padding: 10px;
+}
+
+/* Header */
+.myservices-header{
+  display:flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.title{
+  margin:0;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.subtitle{
+  margin:4px 0 0 0;
+  color:#6c757d;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.count-badge{
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f1f3f5;
+  border: 1px solid rgba(0,0,0,.08);
+  font-weight: 700;
+  font-size: .85rem;
+}
+
+/* Empty state */
+.empty-card{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.06);
+}
+
+.empty-icon{
+  width: 44px;
+  height: 44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius: 12px;
+  background: #f8f9fa;
+  border: 1px solid rgba(0,0,0,.08);
+  font-size: 22px;
+}
+
+/* Cards */
+.service-card{
+  background:#fff;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.06);
+  margin-bottom: 12px;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.service-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.10);
+}
+
+.service-top{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.service-name{
+  font-weight: 800;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  font-size: 1.05rem;
+}
+
+.dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #0d6efd;
+}
+
+/* Status badge */
+.status-badge{
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: .85rem;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.st-pendiente{ background:#fff3cd; color:#664d03; }
+.st-confirmada{ background:#d1e7ff; color:#084298; }
+.st-atendida{ background:#d1e7dd; color:#0f5132; }
+.st-cancelada{ background:#e9ecef; color:#495057; }
+
+/* Layout body */
+.service-body{
+  display:flex;
+  gap: 14px;
+}
+
+.left{
+  flex: 1;
+  min-width: 0;
+}
+
+.right{
+  width: 170px;
+  display:flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  border-left: 1px dashed rgba(0,0,0,.12);
+  padding-left: 14px;
+}
+
+/* Chips */
+.chips{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chip{
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f8f9fa;
+  border: 1px solid rgba(0,0,0,.08);
+  font-weight: 700;
+  font-size: .85rem;
+}
+
+/* Details */
+.details{
+  color:#495057;
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
+.comment{
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: #f8f9fa;
+  border: 1px solid rgba(0,0,0,.08);
+  font-size: .9rem;
+}
+
+/* Price */
+.price{
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: .2px;
+}

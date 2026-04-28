@@ -1,0 +1,6 @@
+@backMecatronic_HostAddress = http://localhost:5107
+
+GET {{backMecatronic_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

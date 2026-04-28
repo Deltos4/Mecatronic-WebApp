@@ -1,0 +1,132 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+
+    <!-- BRAND: Logo + texto -->
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/">
+      <img src="assets/logo_meca.png" class="top-logo" alt="Mecatronic Motors">
+      <span class="fw-semibold">Mecatronic Motors S.A.C.</span>
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav ms-auto">
+
+        <!-- ===== INTERNO (Empleado / Admin) ===== -->
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/clientes" routerLinkActive="active">Clientes</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/vehiculos" routerLinkActive="active">Vehículos</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/servicios" routerLinkActive="active">Servicios</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/ordenes" routerLinkActive="active">Órdenes</a>
+        </li>
+
+        <!-- NUEVO: TÉCNICOS -->
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/tecnicos" routerLinkActive="active">Técnicos</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/proforma" routerLinkActive="active">Proforma</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/inventario/repuestos" routerLinkActive="active">
+            Inventario
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/ventas" routerLinkActive="active">Ventas</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Administrador' || role === 'Empleado'">
+          <a class="nav-link" routerLink="/admin/reportes" routerLinkActive="active">Reportes</a>
+        </li>
+
+        <!-- Solo admin -->
+        <li class="nav-item" *ngIf="role === 'Administrador'">
+          <a class="nav-link" routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
+        </li>
+
+        <!-- ===== CATÁLOGO Y CARRITO (siempre visible para visitantes y clientes) ===== -->
+        <li class="nav-item" *ngIf="role === 'Cliente' || role == null">
+          <a class="nav-link" routerLink="/catalogo" routerLinkActive="active">
+            Catálogo
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Cliente' || role == null">
+          <a class="nav-link" routerLink="/carrito" routerLinkActive="active">
+            Carrito
+            <span *ngIf="cartCount > 0" class="badge bg-success ms-1">
+              {{ cartCount }}
+            </span>
+          </a>
+        </li>
+
+        <!-- ===== SOLO CLIENTE LOGUEADO ===== -->
+        <li class="nav-item" *ngIf="role === 'Cliente'">
+          <a class="nav-link" routerLink="/cliente/citas" routerLinkActive="active">Citas</a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Cliente'">
+          <a class="nav-link" routerLink="/cliente/mis-servicios" routerLinkActive="active">
+            Mis servicios
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Cliente'">
+          <a class="nav-link" routerLink="/cliente/mis-pedidos" routerLinkActive="active">
+            Mis pedidos
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="role === 'Cliente'">
+          <a class="nav-link" routerLink="/cliente/perfil" routerLinkActive="active">
+            Perfil
+          </a>
+        </li>
+
+        <!-- ===== LOGIN / LOGOUT ===== -->
+        <li class="nav-item ms-3" *ngIf="role == null">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Iniciar sesión</a>
+        </li>
+
+        <li class="nav-item d-flex align-items-center ms-3" *ngIf="role != null">
+          <span class="navbar-text me-2">
+            {{ nombreUsuario ?? role }}
+          </span>
+          <button class="btn btn-sm btn-outline-light" type="button" (click)="logout()">
+            Cerrar sesión
+          </button>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container mt-4 mb-4">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- chatbot solo para cliente -->
+<app-chatbot *ngIf="role === 'Cliente'"></app-chatbot>

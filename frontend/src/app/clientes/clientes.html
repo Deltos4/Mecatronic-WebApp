@@ -1,0 +1,191 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+  <h3>Gestión de clientes</h3>
+  <p class="text-muted">Registra y administra los clientes de Mecatronic Motors S.A.C.</p>
+
+  <!-- FORMULARIO -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      {{ editingId !== null ? 'Editar cliente' : 'Registrar nuevo cliente' }}
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardar()" class="row g-3" #formCliente="ngForm">
+
+        <!-- NOMBRE -->
+        <div class="col-md-6">
+          <label class="form-label">Nombre <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 [(ngModel)]="form.nombre_cliente"
+                 name="nombre_cliente"
+                 placeholder="Ej: Juan"
+                 pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                 minlength="2"
+                 maxlength="150"
+                 required>
+          <div class="form-text text-muted">Solo letras, mínimo 2 caracteres.</div>
+        </div>
+
+        <!-- APELLIDO -->
+        <div class="col-md-6">
+          <label class="form-label">Apellido <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 [(ngModel)]="form.apellido_cliente"
+                 name="apellido_cliente"
+                 placeholder="Ej: Pérez García"
+                 pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                 minlength="2"
+                 maxlength="150"
+                 required>
+          <div class="form-text text-muted">Solo letras, mínimo 2 caracteres.</div>
+        </div>
+
+        <!-- TIPO DOCUMENTO (CORREGIDO 🔥) -->
+        <div class="col-md-6">
+          <label class="form-label">Tipo de documento</label>
+          <select class="form-select"
+                  [(ngModel)]="form.tipo_documento_cliente"
+                  name="tipo_documento_cliente"
+                  (change)="onTipoDocChange()">
+            <option value="DNI">DNI</option>
+            <option value="RUC">RUC</option>
+            <option value="CE">Carnet de Extranjería</option>
+            <option value="PAS">Pasaporte</option>
+          </select>
+        </div>
+
+        <!-- NUMERO DOCUMENTO -->
+        <div class="col-md-6">
+          <label class="form-label">N° Documento <span class="text-danger">*</span></label>
+          <input type="text" class="form-control"
+                 [(ngModel)]="form.numero_documento_cliente"
+                 name="numero_documento_cliente"
+                 [placeholder]="form.tipo_documento_cliente === 'DNI' ? '8 dígitos' : form.tipo_documento_cliente === 'RUC' ? '11 dígitos' : 'N° documento'"
+                 [maxlength]="form.tipo_documento_cliente === 'RUC' ? 11 : form.tipo_documento_cliente === 'DNI' ? 8 : 20"
+                 pattern="[0-9A-Za-z]+"
+                 required>
+          <div class="form-text text-muted">
+            {{ form.tipo_documento_cliente === 'DNI' ? 'DNI: exactamente 8 dígitos numéricos.' :
+               form.tipo_documento_cliente === 'RUC' ? 'RUC: exactamente 11 dígitos numéricos.' :
+               'Ingresa el número de documento.' }}
+          </div>
+        </div>
+
+        <!-- CELULAR -->
+        <div class="col-md-6">
+          <label class="form-label">Celular</label>
+          <div class="input-group">
+            <span class="input-group-text">🇵🇪 +51</span>
+            <input type="text" class="form-control"
+                   [(ngModel)]="form.telefono_cliente"
+                   name="telefono_cliente"
+                   placeholder="9XXXXXXXX"
+                   pattern="9[0-9]{8}"
+                   maxlength="9">
+          </div>
+          <div class="form-text text-muted">Celular peruano: 9 dígitos, empieza con 9.</div>
+        </div>
+
+        <!-- DIRECCION -->
+        <div class="col-md-6">
+          <label class="form-label">Dirección</label>
+          <input type="text" class="form-control"
+                 [(ngModel)]="form.direccion_cliente"
+                 name="direccion_cliente"
+                 placeholder="Ej: Av. Angélica Gamarra 2660, Lima"
+                 maxlength="255">
+        </div>
+
+        <!-- BOTONES -->
+        <div class="col-12 text-end">
+          <button type="button"
+                  class="btn btn-secondary me-2"
+                  *ngIf="editingId !== null"
+                  (click)="cancelar()">
+            Cancelar
+          </button>
+
+          <button type="submit" class="btn btn-success">
+            {{ editingId !== null ? 'Guardar cambios' : 'Agregar cliente' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- CARGA -->
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <!-- ERROR -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- LISTA -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      Lista de clientes
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Tipo Doc.</th> <!-- 🔥 NUEVO -->
+            <th>N° Documento</th>
+            <th>Celular</th>
+            <th>Dirección</th>
+            <th>Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let c of clientes">
+            <td>{{ c.id_cliente }}</td>
+            <td>{{ c.nombre_cliente }}</td>
+            <td>{{ c.apellido_cliente }}</td>
+
+            <!-- 🔥 NUEVO -->
+            <td>{{ c.tipo_documento_cliente }}</td>
+
+            <td>{{ c.numero_documento_cliente }}</td>
+            <td>{{ c.telefono_cliente ? '+51 ' + c.telefono_cliente : '—' }}</td>
+            <td>{{ c.direccion_cliente || '—' }}</td>
+
+            <td>
+              <span class="badge"
+                    [ngClass]="c.estado_cliente ? 'bg-success' : 'bg-secondary'">
+                {{ c.estado_cliente ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+
+            <td class="text-center">
+              <button class="btn btn-sm btn-primary me-1"
+                      (click)="editar(c)">
+                Editar
+              </button>
+
+              <button class="btn btn-sm btn-danger"
+                      (click)="eliminar(c.id_cliente)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="clientes.length === 0 && !cargando">
+            <td colspan="9" class="text-center text-muted py-3">
+              No hay clientes registrados.
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>

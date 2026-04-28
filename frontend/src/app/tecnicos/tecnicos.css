@@ -1,0 +1,52 @@
+.contenedor-tecnicos {
+  border-radius: 16px;
+}
+
+.card {
+  border-radius: 16px;
+}
+
+.card-body h2,
+.card-body h4 {
+  color: #1f2937;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+  min-height: 42px;
+}
+
+.btn {
+  border-radius: 10px;
+}
+
+.table thead th {
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.table tbody td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.82rem;
+  padding: 0.5em 0.75em;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .contenedor-tecnicos {
+    margin-top: 1rem !important;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+}

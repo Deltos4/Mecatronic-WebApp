@@ -1,0 +1,111 @@
+<div class="inv-page">
+
+  <div class="inv-head">
+    <div>
+      <h2 class="mb-1">Kardex</h2>
+      <div class="text-muted">Movimientos por repuesto (entradas y salidas) con saldo acumulado.</div>
+    </div>
+  </div>
+
+  <!-- filtros -->
+  <div class="card p-3 shadow-sm mt-3">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label">Repuesto</label>
+        <select class="form-select" [(ngModel)]="repuestoIdSel" (change)="onChangeRepuesto()">
+          <option [ngValue]="null">-- Todos --</option>
+          <option *ngFor="let r of repuestos" [ngValue]="r.id_producto ?? r.id">
+            {{ r.nombre_producto ?? r.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-md-6 text-md-end">
+        <small class="text-muted">{{ movimientos.length }} movimiento(s)</small>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    {{ error }}
+  </div>
+
+  <!-- tabla -->
+  <div class="card p-3 shadow-sm mt-3">
+    <h5 class="mb-3">Detalle</h5>
+
+    <div *ngIf="movimientos.length === 0 && !cargando" class="alert alert-info mb-0">
+      No hay movimientos registrados.
+    </div>
+
+    <div class="table-responsive" *ngIf="movimientos.length > 0">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Repuesto</th>
+            <th>Motivo</th>
+            <th>Ref.</th>
+            <th class="text-end">Entrada</th>
+            <th class="text-end">Salida</th>
+            <th class="text-end">Costo</th>
+            <th class="text-end">Total</th>
+            <th class="text-end">Saldo</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let m of movimientos">
+            <td>{{ formatDate(m.fecha) }}</td>
+
+            <td>
+              <span class="badge"
+                    [ngClass]="m.tipo === 'Entrada' ? 'text-bg-success' : 'text-bg-danger'">
+                {{ m.tipo }}
+              </span>
+            </td>
+
+            <td>{{ m.repuestoNombre || '—' }}</td>
+            <td>{{ m.motivo }}</td>
+            <td class="text-muted">{{ m.referencia ?? '—' }}</td>
+
+            <td class="text-end">
+              <span *ngIf="m.entrada > 0" class="badge text-bg-success">+{{ m.entrada }}</span>
+              <span *ngIf="m.entrada === 0" class="text-muted">—</span>
+            </td>
+
+            <td class="text-end">
+              <span *ngIf="m.salida > 0" class="badge text-bg-danger">-{{ m.salida }}</span>
+              <span *ngIf="m.salida === 0" class="text-muted">—</span>
+            </td>
+
+            <td class="text-end">
+              <span *ngIf="m.costoUnitario != null">
+                {{ m.costoUnitario | currency:'PEN':'symbol':'1.2-2' }}
+              </span>
+              <span *ngIf="m.costoUnitario == null" class="text-muted">—</span>
+            </td>
+
+            <td class="text-end">
+              <span *ngIf="m.total != null">
+                {{ m.total | currency:'PEN':'symbol':'1.2-2' }}
+              </span>
+              <span *ngIf="m.total == null" class="text-muted">—</span>
+            </td>
+
+            <td class="text-end">
+              <span class="badge text-bg-light saldo-badge">{{ m.saldo }}</span>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,26 @@
+.login-page{
+  background: #f4f6f9;
+  min-height: calc(100vh - 64px);
+  padding: 3rem 0;
+}
+
+.login-card{
+  max-width: 520px;
+  margin: 0 auto;
+  border-radius: 14px;
+}
+
+.login-card .form-control{
+  border-radius: 10px;
+}
+
+.login-card .btn-primary,
+.login-card .btn-success{
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 10px 12px;
+}
+
+.alert{
+  border-radius: 10px;
+}

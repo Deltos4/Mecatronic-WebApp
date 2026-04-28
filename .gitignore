@@ -1,0 +1,26 @@
+# === .NET / Visual Studio ===
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.library/
+TestResults/
+upgrade-assistant.cleandata
+
+# === Angular / Node.js ===
+node_modules/
+dist/
+.angular/
+.cache/
+npm-debug.log*
+yarn-error.log*
+.vscode/
+
+# === Archivos de Sistema y Otros ===
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*.local

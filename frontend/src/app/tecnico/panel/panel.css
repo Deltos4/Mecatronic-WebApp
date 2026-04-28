@@ -1,0 +1,41 @@
+.contenedor-panel {
+  border-radius: 16px;
+}
+
+.card {
+  border-radius: 16px;
+}
+
+.tarjeta-resumen {
+  background: #ffffff;
+}
+
+.tarjeta-resumen h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+h2, h5 {
+  color: #1f2937;
+}
+
+.table thead th {
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.55em 0.8em;
+  border-radius: 999px;
+}
+
+.btn {
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .tarjeta-resumen h3 {
+    font-size: 1.6rem;
+  }
+}

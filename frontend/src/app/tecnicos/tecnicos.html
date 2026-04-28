@@ -1,0 +1,160 @@
+<div class="card shadow-sm border-0 mt-4 mb-4 contenedor-tecnicos">
+  <div class="card-body p-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+      <div>
+        <h2 class="mb-1">Técnicos</h2>
+        <p class="text-muted mb-0">Gestiona el personal técnico de Mecatronic Motors S.A.C.</p>
+      </div>
+      <button class="btn btn-primary" type="button" (click)="nuevoTecnico()">+ Nuevo técnico</button>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-8">
+            <label class="form-label">Buscar</label>
+            <input type="text" class="form-control" placeholder="Nombre, apellido, DNI o cargo"
+                   [(ngModel)]="filtroTexto">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Estado</label>
+            <select class="form-select" [(ngModel)]="filtroEstado">
+              <option value="">Todos</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+          </div>
+          <div class="col-md-1 d-grid">
+            <button class="btn btn-outline-secondary" type="button" (click)="limpiarFiltros()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="card shadow-sm border-0 mb-4" *ngIf="mostrarFormulario">
+      <div class="card-body">
+        <h4 class="mb-3">{{ modoEdicion ? 'Editar técnico' : 'Nuevo técnico' }}</h4>
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="tecnicoForm.nombre_empleado"
+                   placeholder="Ej: Carlos"
+                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" minlength="2" maxlength="150">
+            <div class="form-text text-muted">Solo letras.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Apellido <span class="text-danger">*</span></label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="tecnicoForm.apellido_empleado"
+                   placeholder="Ej: Ramos Torres"
+                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" minlength="2" maxlength="150">
+            <div class="form-text text-muted">Solo letras.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">DNI <span class="text-danger">*</span></label>
+            <input type="text" class="form-control"
+                   [(ngModel)]="tecnicoForm.dni_empleado"
+                   placeholder="8 dígitos"
+                   pattern="[0-9]{8}" maxlength="8">
+            <div class="form-text text-muted">Exactamente 8 dígitos numéricos.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Celular</label>
+            <div class="input-group">
+              <span class="input-group-text">🇵🇪 +51</span>
+              <input type="text" class="form-control"
+                     [(ngModel)]="tecnicoForm.telefono_empleado"
+                     placeholder="9XXXXXXXX"
+                     pattern="9[0-9]{8}" maxlength="9">
+            </div>
+            <div class="form-text text-muted">9 dígitos, empieza con 9.</div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Correo</label>
+            <input type="email" class="form-control"
+                   [(ngModel)]="tecnicoForm.correo_empleado"
+                   placeholder="correo@ejemplo.com">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Cargo <span class="text-danger">*</span></label>
+            <select class="form-select" [(ngModel)]="tecnicoForm.cargo_empleado">
+              <option value="">-- Selecciona --</option>
+              <option>Técnico</option>
+              <option>Técnico Senior</option>
+              <option>Auxiliar Técnico</option>
+              <option>Jefe de Taller</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Estado</label>
+            <select class="form-select" [(ngModel)]="tecnicoForm.estado_empleado">
+              <option [ngValue]="true">Activo</option>
+              <option [ngValue]="false">Inactivo</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button class="btn btn-outline-secondary" type="button" (click)="cancelar()">Cancelar</button>
+          <button class="btn btn-primary" type="button" (click)="guardar()">
+            {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARGA / ERROR -->
+    <div *ngIf="cargando" class="text-center my-3">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <!-- TABLA -->
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover table-striped align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th><th>Nombre</th><th>Apellido</th><th>DNI</th>
+                <th>Celular</th><th>Cargo</th><th>Estado</th><th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of tecnicosFiltrados">
+                <td>{{ t.id_tecnico }}</td>
+                <td>{{ t.nombre_empleado }}</td>
+                <td>{{ t.apellido_empleado }}</td>
+                <td>{{ t.dni_empleado }}</td>
+                <td>{{ t.telefono_empleado ? '+51 ' + t.telefono_empleado : '—' }}</td>
+                <td>{{ t.cargo_empleado }}</td>
+                <td>
+                  <span class="badge" [ngClass]="t.estado_empleado ? 'bg-success' : 'bg-secondary'">
+                    {{ t.estado_empleado ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-primary me-2" (click)="editar(t.id_tecnico)">Editar</button>
+                  <button class="btn btn-sm btn-danger" (click)="eliminar(t.id_tecnico)">Eliminar</button>
+                </td>
+              </tr>
+              <tr *ngIf="tecnicosFiltrados.length === 0 && !cargando">
+                <td colspan="8" class="text-center text-muted py-4">No hay técnicos registrados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

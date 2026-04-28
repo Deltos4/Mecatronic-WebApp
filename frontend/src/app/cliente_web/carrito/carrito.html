@@ -1,0 +1,67 @@
+<div class="carrito-page mt-4 mb-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="mb-0">🛒 Mi carrito</h3>
+      <small class="text-muted">Revisa tus productos antes de confirmar</small>
+    </div>
+    <a routerLink="/catalogo" class="btn btn-outline-primary">
+      ← Seguir comprando
+    </a>
+  </div>
+
+  <!-- CARRITO VACÍO -->
+  <div *ngIf="items.length === 0" class="carrito-vacio text-center py-5">
+    <div style="font-size:80px">🛒</div>
+    <h4 class="mt-3 fw-bold">Tu carrito está vacío</h4>
+    <p class="text-muted">Aún no has agregado ningún producto.<br>Explora nuestro catálogo y encuentra lo que necesitas.</p>
+    <a routerLink="/catalogo" class="btn btn-primary btn-lg mt-2">
+      Ver catálogo
+    </a>
+  </div>
+
+  <!-- CARRITO CON PRODUCTOS -->
+  <div *ngIf="items.length > 0">
+    <div class="card shadow-sm mb-3" *ngFor="let it of items">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="producto-thumb">🔩</div>
+        <div class="flex-grow-1">
+          <div class="fw-bold">{{ it.nombre }}</div>
+          <div class="text-muted small">S/ {{ it.precio | number:'1.2-2' }} c/u</div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-outline-secondary btn-sm" (click)="cambiarCantidad(it, it.cantidad - 1)">−</button>
+          <span class="fw-bold px-2">{{ it.cantidad }}</span>
+          <button class="btn btn-outline-secondary btn-sm" (click)="cambiarCantidad(it, it.cantidad + 1)">+</button>
+        </div>
+        <div class="text-end" style="min-width:90px">
+          <div class="fw-bold text-success">S/ {{ it.precio * it.cantidad | number:'1.2-2' }}</div>
+        </div>
+        <button class="btn btn-outline-danger btn-sm" (click)="eliminarItem(it)">🗑️</button>
+      </div>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">{{ items.length }} producto(s)</span>
+          <button class="btn btn-outline-danger btn-sm" (click)="vaciarCarrito()">
+            Vaciar carrito
+          </button>
+        </div>
+        <div class="d-flex justify-content-between align-items-center border-top pt-3">
+          <h5 class="mb-0">Total</h5>
+          <h4 class="mb-0 fw-bold text-success">S/ {{ total | number:'1.2-2' }}</h4>
+        </div>
+        <button class="btn btn-primary w-100 btn-lg mt-3" (click)="confirmarPedido()">
+          ✅ Confirmar pedido
+        </button>
+        <a routerLink="/cliente/mis-pedidos" class="btn btn-outline-secondary w-100 mt-2">
+          Ver mis pedidos
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>

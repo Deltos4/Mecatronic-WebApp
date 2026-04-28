@@ -1,0 +1,37 @@
+<!-- boton flotante -->
+<button class="fab" (click)="toggle()">
+  💬
+</button>
+
+<!-- ventana del chat -->
+<div class="chatbox" *ngIf="abierto">
+
+  <!-- cabecera -->
+  <div class="header">
+    <div class="title">
+      <div class="name">Asistente Mecatronic</div>
+      <div class="sub">Respuestas rápidas</div>
+    </div>
+
+    <!-- cerrar -->
+    <button class="close" (click)="toggle()">✕</button>
+  </div>
+
+  <!-- mensajes -->
+  <div class="body" #chatBody>
+    <div *ngFor="let m of mensajes" class="msg" [ngClass]="m.sender">
+      {{ m.text }}
+    </div>
+  </div>
+
+  <!-- input -->
+  <div class="input">
+    <input
+      [(ngModel)]="input"
+      placeholder="Escribe tu consulta..."
+      (keydown.enter)="enviar()"
+    />
+    <button (click)="enviar()">➤</button>
+  </div>
+
+</div>

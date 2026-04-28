@@ -1,0 +1,27 @@
+.inv-page{
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.inv-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:16px;
+}
+
+@media (max-width: 768px){
+  .inv-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+
+table th{
+  white-space: nowrap;
+}
+
+.saldo-badge{
+  font-weight: 700;
+  border: 1px solid rgba(0,0,0,.08);
+}

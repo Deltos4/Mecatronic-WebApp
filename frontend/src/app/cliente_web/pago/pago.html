@@ -1,0 +1,231 @@
+<div class="row g-4">
+
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="mb-3">Pago</h3>
+
+        <!-- BLOQUE LOGIN -->
+        <div *ngIf="!estaLogueado" class="alert alert-warning">
+          <div class="fw-semibold mb-2">Para finalizar tu compra debes iniciar sesión o crear una cuenta.</div>
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-primary" (click)="irALogin()">Iniciar sesión</button>
+            <button type="button" class="btn btn-outline-primary" (click)="irACrearCuenta()">Crear cuenta</button>
+          </div>
+        </div>
+
+        <!-- Datos cliente -->
+        <h5 class="mb-2">Datos del cliente</h5>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Nombres <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="nombres" [disabled]="!estaLogueado">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Apellido</label>
+            <input class="form-control" [(ngModel)]="apellido" [disabled]="!estaLogueado">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Celular</label>
+            <input class="form-control" [(ngModel)]="celular" placeholder="9 dígitos" maxlength="9" [disabled]="!estaLogueado">
+            <small class="form-text text-muted">9 dígitos, empieza con 9</small>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Correo <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="correo" [disabled]="!estaLogueado">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Dirección</label>
+            <input class="form-control" [(ngModel)]="direccion" [disabled]="!estaLogueado">
+          </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Comprobante SUNAT -->
+        <h5 class="mb-2">Comprobante electrónico (SUNAT)</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Tipo <span class="text-danger">*</span></label>
+            <select class="form-select" [(ngModel)]="tipoComprobante" [disabled]="!estaLogueado">
+              <option value="BOLETA">Boleta de venta</option>
+              <option value="FACTURA">Factura</option>
+            </select>
+          </div>
+
+          <!-- BOLETA: solo DNI -->
+          <div class="col-md-4" *ngIf="tipoComprobante === 'BOLETA'">
+            <label class="form-label">DNI <span class="text-danger">*</span></label>
+            <input class="form-control" [(ngModel)]="dni" placeholder="8 dígitos" maxlength="8" [disabled]="!estaLogueado">
+            <small class="form-text text-muted">Documento Nacional de Identidad</small>
+          </div>
+
+          <!-- FACTURA: RUC + razón social + dirección fiscal -->
+          <ng-container *ngIf="tipoComprobante === 'FACTURA'">
+            <div class="col-md-4">
+              <label class="form-label">RUC <span class="text-danger">*</span></label>
+              <input class="form-control" [(ngModel)]="ruc" placeholder="11 dígitos" maxlength="11" [disabled]="!estaLogueado">
+              <small class="form-text text-muted">Empieza con 10 (persona) o 20 (empresa)</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Razón social <span class="text-danger">*</span></label>
+              <input class="form-control" [(ngModel)]="razonSocial" [disabled]="!estaLogueado"
+                     placeholder="Ej: MECATRONIC MOTORS S.A.C.">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Dirección fiscal <span class="text-danger">*</span></label>
+              <input class="form-control" [(ngModel)]="direccionFiscal" [disabled]="!estaLogueado"
+                     placeholder="Ej: Av. Industrial 123, Lima">
+            </div>
+          </ng-container>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Método de pago -->
+        <h5 class="mb-2">Método de pago</h5>
+        <div class="btn-group w-100 mb-3 flex-wrap">
+          <button type="button" class="btn btn-outline-primary"
+                  [class.active]="metodo==='YAPE'" (click)="cambiarMetodo('YAPE')" [disabled]="!estaLogueado">
+            Yape
+          </button>
+          <button type="button" class="btn btn-outline-primary"
+                  [class.active]="metodo==='PLIN'" (click)="cambiarMetodo('PLIN')" [disabled]="!estaLogueado">
+            Plin
+          </button>
+          <button type="button" class="btn btn-outline-primary"
+                  [class.active]="metodo==='TRANSFERENCIA'" (click)="cambiarMetodo('TRANSFERENCIA')" [disabled]="!estaLogueado">
+            Transferencia
+          </button>
+          <button type="button" class="btn btn-outline-primary"
+                  [class.active]="metodo==='TARJETA'" (click)="cambiarMetodo('TARJETA')" [disabled]="!estaLogueado">
+            Tarjeta
+          </button>
+          <button type="button" class="btn btn-outline-primary"
+                  [class.active]="metodo==='CONTADO'" (click)="cambiarMetodo('CONTADO')" [disabled]="!estaLogueado">
+            Contado
+          </button>
+        </div>
+
+        <div class="alert alert-warning" *ngIf="metodo==='YAPE' || metodo==='PLIN'">
+          Paga por {{ metodo }} y coloca tu N° de operación.
+        </div>
+        <div class="alert alert-secondary" *ngIf="metodo==='TRANSFERENCIA'">
+          Transfiere y coloca tu referencia/operación.
+        </div>
+        <div class="alert alert-info" *ngIf="metodo==='TARJETA'">
+          (Demo) Próximamente se integra pasarela real.
+        </div>
+        <div class="alert alert-success" *ngIf="metodo==='CONTADO'">
+          Pago en efectivo al recoger en tienda.
+        </div>
+
+        <div *ngIf="metodo !== 'CONTADO'">
+          <label class="form-label">N° Operación / Referencia</label>
+          <input class="form-control" [(ngModel)]="referenciaPago" placeholder="Ej: 123456" [disabled]="!estaLogueado">
+        </div>
+
+        <hr class="my-4">
+
+        <!-- ENTREGA / CITA -->
+        <h5 class="mb-2">
+          {{ metodoEntrega === 'RECOJO_EN_TIENDA' ? 'Método de entrega' : 'Programación de cita' }}
+        </h5>
+
+        <div *ngIf="metodoEntrega === 'RECOJO_EN_TIENDA'" class="card border-0 bg-light">
+          <div class="card-body">
+            <div class="fw-semibold mb-1">Recojo en tienda</div>
+            <p class="text-muted mb-2">Podrás recoger tu pedido en nuestro taller.</p>
+            <div class="alert alert-info mb-0">
+              <strong>Horario:</strong> Lunes a sábado, 8:00 a.m. – 6:00 p.m.
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="metodoEntrega === 'CITA'" class="card border-0 bg-light">
+          <div class="card-body">
+            <div class="fw-semibold mb-1">Atención con cita</div>
+            <p class="text-muted mb-3">Tu compra incluye servicios. Selecciona fecha y hora.</p>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Fecha de cita <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" [(ngModel)]="fechaCita" [disabled]="!estaLogueado">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Hora de cita <span class="text-danger">*</span></label>
+                <input type="time" class="form-control" [(ngModel)]="horaCita" [disabled]="!estaLogueado">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Placa del vehículo <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="placa"
+                       placeholder="Ej: ABC-123" [disabled]="!estaLogueado" maxlength="7"
+                       style="text-transform: uppercase;">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Comentario</label>
+                <input type="text" class="form-control" [(ngModel)]="comentarioServicio"
+                       placeholder="Opcional" [disabled]="!estaLogueado">
+              </div>
+            </div>
+            <div class="alert alert-info mt-3 mb-0">
+              <strong>Horario:</strong> Lunes a sábado, 8:00 a.m. – 6:00 p.m.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-success w-100 mt-4" (click)="pagarAhora()" [disabled]="cargando || !estaLogueado">
+          {{ cargando ? 'Procesando...' : 'Pagar S/ ' + (total | number:'1.2-2') }}
+        </button>
+
+        <a routerLink="/carrito" class="btn btn-outline-secondary w-100 mt-2">
+          Volver al carrito
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="col-lg-5">
+    <div class="card shadow-sm sticky-top" style="top: 16px;">
+      <div class="card-body">
+        <h5 class="mb-3">Resumen del pedido</h5>
+
+        <div *ngFor="let it of items" class="d-flex justify-content-between mb-2">
+          <div>
+            <div class="fw-semibold">{{ it.nombre }}</div>
+            <div class="text-muted small">
+              x{{ it.cantidad }}
+              <span class="ms-1 badge bg-secondary">{{ it.tipo }}</span>
+            </div>
+          </div>
+          <div>S/ {{ (it.precio * it.cantidad) | number:'1.2-2' }}</div>
+        </div>
+
+        <hr>
+        <div class="d-flex justify-content-between text-muted">
+          <span>Subtotal (sin IGV)</span>
+          <span>S/ {{ subtotalSinIGV | number:'1.2-2' }}</span>
+        </div>
+        <div class="d-flex justify-content-between text-muted">
+          <span>IGV (18%)</span>
+          <span>S/ {{ igv | number:'1.2-2' }}</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between fw-bold">
+          <span>Total</span>
+          <span>S/ {{ total | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="mt-3 small text-muted">
+          <div *ngIf="tipoComprobante === 'BOLETA'">
+            📄 Se emitirá <strong>Boleta de Venta</strong>
+          </div>
+          <div *ngIf="tipoComprobante === 'FACTURA'">
+            📄 Se emitirá <strong>Factura</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

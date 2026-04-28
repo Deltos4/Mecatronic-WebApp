@@ -1,0 +1,55 @@
+<div class="card p-4 shadow-sm profile-shell">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+      <h3 class="mb-0">Mi perfil</h3>
+      <small class="text-muted">Actualiza tus datos para futuras citas y pedidos</small>
+    </div>
+    <button class="btn btn-outline-danger btn-sm" (click)="cerrarSesion()">
+      Cerrar sesión
+    </button>
+  </div>
+
+  <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Nombre <span class="text-danger">*</span></label>
+      <input class="form-control" [(ngModel)]="perfil.nombre" placeholder="Ej: Juan">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Apellido</label>
+      <input class="form-control" [(ngModel)]="perfil.apellido" placeholder="Ej: Pérez García">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Celular</label>
+      <input class="form-control" [(ngModel)]="perfil.telefono" placeholder="9 dígitos" maxlength="9">
+      <small class="form-text text-muted">9 dígitos, empieza con 9</small>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Correo</label>
+      <input class="form-control" [(ngModel)]="perfil.correo" disabled>
+      <small class="form-text text-muted">El correo no se puede cambiar</small>
+    </div>
+    <div class="col-12">
+      <label class="form-label">Dirección</label>
+      <input class="form-control" [(ngModel)]="perfil.direccion" placeholder="Ej: Av. Principal 123, Lima">
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-4 gap-2">
+    <a class="btn btn-outline-secondary" routerLink="/catalogo">Volver</a>
+    <button class="btn btn-primary" (click)="guardar()" [disabled]="cargando">
+      {{ cargando ? 'Guardando...' : 'Guardar cambios' }}
+    </button>
+  </div>
+
+  <div class="mt-4">
+    <div class="alert alert-light border small mb-0">
+      <strong>Atajos:</strong>
+      <a class="ms-2" routerLink="/cliente/mis-servicios">Mis servicios</a> ·
+      <a class="ms-2" routerLink="/cliente/mis-pedidos">Mis pedidos</a>
+    </div>
+  </div>
+</div>

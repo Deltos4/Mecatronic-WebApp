@@ -1,0 +1,90 @@
+/* =========================
+   BASE
+========================= */
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f5f5f5;
+}
+
+.app-container{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+main{
+  max-width: 1000px;
+  margin: 20px auto 40px auto;
+  background-color: #ffffff;
+  padding: 20px 30px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  border-radius: 6px;
+}
+
+.card{
+  border-radius: 14px;
+}
+
+/* =========================
+   NAVBAR (ARRIBA)
+========================= */
+.navbar{
+  min-height: 64px;
+}
+
+/* evita que el navbar crezca por el brand */
+.navbar .navbar-brand{
+  padding-top: 6px;
+  padding-bottom: 6px;
+  line-height: 1;
+}
+
+/* LOGO ARRIBA */
+.navbar .top-logo{
+  height: 32px;          /* ajusta 28-40 */
+  width: auto;
+  max-height: 32px;
+  max-width: 140px;      /* evita ancho exagerado */
+  object-fit: contain;
+  display: inline-block;
+}
+
+/* =========================
+   LOGIN (ABAJO)
+========================= */
+.login-page{
+  background: #f4f6f9;
+  min-height: calc(100vh - 64px);
+  padding: 3rem 0;
+}
+
+.login-card{
+  max-width: 420px;
+  margin: 0 auto;
+  border-radius: 14px;
+}
+
+/* LOGO ABAJO */
+.login-logo{
+  height: 70px;          /* ajusta 60-90 */
+  width: auto;
+  max-height: 70px;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.login-card .form-control{
+  border-radius: 10px;
+}
+
+.login-card .btn-primary{
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 10px 12px;
+}

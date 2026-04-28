@@ -1,0 +1,74 @@
+[
+  {
+    "id": 101,
+    "nombre": "Aceite Liqui Moly Molygen",
+    "categoria": "Aceites",
+    "descripcion": "Aceite de alto rendimiento para motor.",
+    "precio": 85,
+    "imagen": "assets/aceite_Liqui_Moly.png"
+  },
+  {
+    "id": 102,
+    "nombre": "Aceite Mobil Delvac",
+    "categoria": "Aceites",
+    "descripcion": "Aceite recomendado para motores diésel.",
+    "precio": 70,
+    "imagen": "assets/aceite_movil_Delvac.png"
+  },
+  {
+    "id": 103,
+    "nombre": "Bomba eléctrica de combustible Bosch",
+    "categoria": "Combustible",
+    "descripcion": "Bomba eléctrica para sistema de combustible.",
+    "precio": 120,
+    "imagen": "assets/bombaElectricaDeCombustible_Bosh.png"
+  },
+  {
+    "id": 104,
+    "nombre": "Bombilla Narva Faros Delanteros",
+    "categoria": "Iluminación",
+    "descripcion": "Bombilla para faros delanteros, alta duración.",
+    "precio": 35,
+    "imagen": "assets/bombilla_FarosDelanteros_Narva.png"
+  },
+  {
+    "id": 105,
+    "nombre": "Bombilla Narva Señalización",
+    "categoria": "Iluminación",
+    "descripcion": "Bombilla para señalización y luces auxiliares.",
+    "precio": 20,
+    "imagen": "assets/bombilla_Narva-señalizacion.png"
+  },
+  {
+    "id": 106,
+    "nombre": "Claxon Bosch (CR8 Paquerinha)",
+    "categoria": "Claxon",
+    "descripcion": "Claxon Bosch para señalización sonora.",
+    "precio": 45,
+    "imagen": "assets/claxon_Bosch_cr8paquerinha.png"
+  },
+  {
+    "id": 107,
+    "nombre": "Claxon Bosch (PB9)",
+    "categoria": "Claxon",
+    "descripcion": "Claxon Bosch, sonido potente.",
+    "precio": 50,
+    "imagen": "assets/claxon_bosch_pb9.png"
+  },
+  {
+    "id": 108,
+    "nombre": "Electrobomba",
+    "categoria": "Bombas",
+    "descripcion": "Electrobomba para aplicaciones automotrices.",
+    "precio": 95,
+    "imagen": "assets/electrobomba.png"
+  },
+  {
+    "id": 109,
+    "nombre": "Focos LED Faros Delanteros",
+    "categoria": "Iluminación LED",
+    "descripcion": "Kit de focos LED para faros delanteros.",
+    "precio": 110,
+    "imagen": "assets/focosLed_farosDelanteros.png"
+  }
+]

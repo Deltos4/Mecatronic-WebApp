@@ -1,0 +1,246 @@
+<div class="proforma-page">
+
+  <div *ngIf="cargando" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Cargando datos...</p>
+  </div>
+
+  <div class="card">
+    <h2>Proforma de Taller</h2>
+    <p class="muted">
+      Registra servicios, productos del taller, mano de obra y productos traídos por el cliente.
+      Genera Boleta o Factura electrónica según SUNAT.
+    </p>
+
+    <!-- CABECERA -->
+    <div class="grid-2">
+      <div>
+        <label>Cliente <span class="text-danger">*</span></label>
+        <select class="form-control" [(ngModel)]="clienteId" (change)="onClienteChange()">
+          <option [ngValue]="null">Seleccione un cliente</option>
+          <option *ngFor="let c of clientes" [ngValue]="c.id_cliente">
+            {{ c.nombre_cliente }} {{ c.apellido_cliente }}
+            <ng-container *ngIf="c.numero_documento_cliente"> — {{ c.numero_documento_cliente }}</ng-container>
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label>Vehículo <span class="text-danger">*</span></label>
+        <select class="form-control" [(ngModel)]="vehiculoId">
+          <option [ngValue]="null">Seleccione un vehículo</option>
+          <option *ngFor="let v of vehiculosFiltrados" [ngValue]="v.id_vehiculo">
+            {{ v.placa_vehiculo }} — {{ v.nombre_marca_vehiculo ?? '' }} {{ v.nombre_modelo_vehiculo ?? '' }} ({{ v.anio_vehiculo }})
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label>Fecha <span class="text-danger">*</span></label>
+        <input type="date" class="form-control" [(ngModel)]="fecha">
+      </div>
+
+      <div>
+        <label>Motivo de ingreso / diagnóstico inicial</label>
+        <input type="text" class="form-control" [(ngModel)]="motivoIngreso"
+               placeholder="Ej: Escaneo, revisión eléctrica, instalación de accesorios">
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <label>Observaciones generales</label>
+      <textarea class="form-control" rows="3" [(ngModel)]="observacionesGenerales"
+                placeholder="Ej: Precios sujetos a revisión técnica. Validez 7 días."></textarea>
+    </div>
+  </div>
+
+  <!-- BOTONES AGREGAR -->
+  <div class="card mt-20">
+    <h3>Agregar detalle</h3>
+    <div class="actions">
+      <button class="btn btn-dark" (click)="agregarDetalle('servicio')">+ Servicio</button>
+      <button class="btn btn-primary" (click)="agregarDetalle('producto_taller')">+ Producto taller</button>
+      <button class="btn btn-success" (click)="agregarDetalle('mano_obra')">+ Mano de obra</button>
+      <button class="btn btn-warning" (click)="agregarDetalle('producto_cliente')">+ Producto cliente</button>
+    </div>
+  </div>
+
+  <!-- DETALLE -->
+  <div class="card mt-20">
+    <h3>Detalle de la proforma</h3>
+    <div class="table-responsive">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
+            <th>Precio Unit.</th>
+            <th>Subtotal</th>
+            <th>Garantía</th>
+            <th>Observación</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="detalles.length === 0">
+            <td colspan="8" class="empty">No hay detalles agregados.</td>
+          </tr>
+          <tr *ngFor="let d of detalles; let i = index">
+            <td>{{ getTipoLabel(d.tipo) }}</td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="d.descripcion" placeholder="Descripción">
+            </td>
+            <td>
+              <input type="number" class="form-control small-input" min="1" [(ngModel)]="d.cantidad" (input)="recalcular(d)">
+            </td>
+            <td>
+              <input type="number" class="form-control small-input" min="0"
+                     [disabled]="d.tipo === 'producto_cliente'"
+                     [(ngModel)]="d.precio" (input)="recalcular(d)">
+            </td>
+            <td>S/ {{ d.subtotal.toFixed(2) }}</td>
+            <td>
+              <span [class.badge-ok]="d.aplicaGarantia" [class.badge-no]="!d.aplicaGarantia">
+                {{ d.aplicaGarantia ? 'Sí' : 'No' }}
+              </span>
+            </td>
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="d.observacion" placeholder="Observación">
+            </td>
+            <td>
+              <button class="btn btn-danger" (click)="eliminarDetalle(i)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RESUMEN CON IGV -->
+  <div class="card mt-20">
+    <h3>Resumen</h3>
+    <div class="summary">
+      <div><strong>Total servicios:</strong> S/ {{ totalServicios.toFixed(2) }}</div>
+      <div><strong>Total productos del taller:</strong> S/ {{ totalProductosTaller.toFixed(2) }}</div>
+      <div><strong>Total mano de obra:</strong> S/ {{ totalManoObra.toFixed(2) }}</div>
+      <hr>
+      <div><strong>Subtotal (sin IGV):</strong> S/ {{ subtotalSinIGV.toFixed(2) }}</div>
+      <div><strong>IGV (18%):</strong> S/ {{ igv.toFixed(2) }}</div>
+      <div class="total"><strong>TOTAL GENERAL:</strong> S/ {{ totalGeneral.toFixed(2) }}</div>
+    </div>
+    <div class="alert-warning-box mt-16">
+      Los productos traídos por el cliente no cuentan con garantía del producto.
+    </div>
+  </div>
+
+  <!-- ACEPTAR Y COMPROBANTE -->
+  <div class="card mt-20">
+    <h3>Aceptación y comprobante de pago</h3>
+
+    <button class="btn btn-accept" (click)="aceptarProforma()" *ngIf="!proformaAceptada">
+      Aceptar proforma
+    </button>
+
+    <div *ngIf="proformaAceptada" class="accepted-box mt-16">
+      <div class="alert alert-success mb-3">
+        ✅ Proforma aceptada. Completa los datos del comprobante.
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Tipo de comprobante <span class="text-danger">*</span></label>
+          <select class="form-control" [(ngModel)]="tipoComprobante">
+            <option value="">Seleccione</option>
+            <option value="BOLETA">BOLETA DE VENTA</option>
+            <option value="FACTURA">FACTURA</option>
+          </select>
+        </div>
+        <div>
+          <label>Método de pago <span class="text-danger">*</span></label>
+          <select class="form-control" [(ngModel)]="metodoPago">
+            <option value="">Seleccione</option>
+            <option *ngFor="let m of metodosPago" [value]="m.id_metodo_pago">
+              {{ m.nombre_metodo_pago }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- BOLETA -->
+      <div *ngIf="tipoComprobante === 'BOLETA'" class="mt-16">
+        <div class="grid-2">
+          <div>
+            <label>DNI del cliente <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="dniBoleta"
+                   maxlength="8" pattern="[0-9]{8}" placeholder="Ej: 12345678">
+            <small class="form-text text-muted">8 dígitos</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- FACTURA -->
+      <div *ngIf="tipoComprobante === 'FACTURA'" class="grid-3 mt-16">
+        <div>
+          <label>RUC <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="ruc"
+                 maxlength="11" pattern="[0-9]{11}" placeholder="Ej: 20123456789">
+          <small class="form-text text-muted">11 dígitos (empieza con 10 o 20)</small>
+        </div>
+        <div>
+          <label>Razón social <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="razonSocial"
+                 placeholder="Ej: MECATRONIC MOTORS S.A.C.">
+        </div>
+        <div>
+          <label>Dirección fiscal <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="direccionFiscal"
+                 placeholder="Ej: Av. Industrial 123, Lima">
+        </div>
+      </div>
+
+      <div class="mt-16">
+        <button class="btn btn-generate" (click)="generarComprobante()" [disabled]="cargando">
+          {{ cargando ? 'Generando...' : 'Generar comprobante' }}
+        </button>
+        <button class="btn btn-secondary ms-2" (click)="limpiarFormulario()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="card mt-20">
+    <h3>Historial de comprobantes generados</h3>
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Vehículo</th>
+          <th>Fecha</th>
+          <th>Subtotal</th>
+          <th>IGV</th>
+          <th>Total</th>
+          <th>Comprobante</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="historial.length === 0">
+          <td colspan="9" class="empty">Todavía no se generó ningún comprobante.</td>
+        </tr>
+        <tr *ngFor="let h of historial">
+          <td>{{ h.id ?? h.id_comprobante }}</td>
+          <td>{{ h.cliente ?? (h.nombre_cliente ? h.nombre_cliente + ' ' + (h.apellido_cliente ?? '') : h.id_cliente) }}</td>
+          <td>{{ h.vehiculo ?? h.placa_vehiculo ?? '' }}</td>
+          <td>{{ h.fecha ?? h.fecha_emision }}</td>
+          <td>S/ {{ (h.subtotal ?? 0).toFixed(2) }}</td>
+          <td>S/ {{ (h.igv ?? 0).toFixed(2) }}</td>
+          <td>S/ {{ (h.total ?? h.total_comprobante ?? 0).toFixed(2) }}</td>
+          <td>{{ h.comprobante ?? h.tipo_comprobante }}</td>
+          <td>{{ h.estado ?? 'CONVERTIDA' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

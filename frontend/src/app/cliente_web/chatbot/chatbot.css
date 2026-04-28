@@ -1,0 +1,124 @@
+/* Para que el widget flote encima de todo */
+:host {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+/* Botón flotante */
+.fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: #5b5ce2;
+  color: #fff;
+  font-size: 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+}
+
+/* Caja del chat */
+.chatbox {
+  position: absolute;
+  right: 0;
+  bottom: 70px;
+  width: 340px;
+  height: 520px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  padding: 12px 12px;
+  background: #5b5ce2;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title .name {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.title .sub {
+  font-size: 12px;
+  opacity: .9;
+}
+
+.close {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Body */
+.body {
+  flex: 1;
+  padding: 12px;
+  background: #fafafa;
+  overflow: auto;
+}
+
+/* Mensajes */
+.msg {
+  max-width: 78%;
+  padding: 10px 12px;
+  border-radius: 14px;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  line-height: 1.25;
+  font-size: 14px;
+}
+
+.msg.user {
+  background: #5b5ce2;
+  color: #fff;
+  margin-left: auto;
+}
+
+.msg.bot {
+  background: #eeeeee;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+}
+
+/* Input */
+.input {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.input input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+}
+
+.input button {
+  width: 44px;
+  border: none;
+  border-radius: 12px;
+  background: #5b5ce2;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}

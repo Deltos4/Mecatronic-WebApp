@@ -1,0 +1,65 @@
+<div class="card mt-4 mb-4 p-4 shadow-sm">
+  <h3>Mis órdenes asignadas</h3>
+  <p class="text-muted">Órdenes de servicio que te han sido asignadas.</p>
+
+  <!-- Filtro -->
+  <div class="row g-2 mb-3">
+    <div class="col-md-4">
+      <select class="form-select" [(ngModel)]="filtroEstado">
+        <option value="">Todos los estados</option>
+        <option>Pendiente</option>
+        <option>En proceso</option>
+        <option>Completado</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-outline-primary" (click)="cargar()">Actualizar</button>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>N° Orden</th>
+          <th>Cliente</th>
+          <th>Vehículo</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let o of ordenesFiltradas">
+          <td>#{{ o.id_orden_servicio ?? o.id }}</td>
+          <td>{{ o.nombre_cliente ? o.nombre_cliente + ' ' + (o.apellido_cliente ?? '') : 'Cliente #' + o.id_cliente }}</td>
+          <td>{{ o.placa_vehiculo ?? 'Vehículo #' + (o.id_vehiculo ?? '') }}</td>
+          <td>{{ formatDate(o.fecha_inicio) }}</td>
+          <td>
+            <span class="badge" [ngClass]="{
+              'bg-warning text-dark': o.estado === 'Pendiente',
+              'bg-primary': o.estado === 'En proceso',
+              'bg-success': o.estado === 'Completado'}">
+              {{ o.estado }}
+            </span>
+          </td>
+          <td>
+            <button *ngIf="o.estado === 'Pendiente'" class="btn btn-sm btn-primary"
+                    (click)="cambiarEstado(o, 'En proceso')">Iniciar</button>
+            <button *ngIf="o.estado === 'En proceso'" class="btn btn-sm btn-success"
+                    (click)="cambiarEstado(o, 'Completado')">Completar</button>
+            <span *ngIf="o.estado === 'Completado'" class="text-success small fw-semibold">Finalizada</span>
+          </td>
+        </tr>
+        <tr *ngIf="ordenesFiltradas.length === 0 && !cargando">
+          <td colspan="6" class="text-center text-muted py-4">No hay órdenes asignadas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+.reporte-card {
+  border-radius: 10px;
+}
+
+.resumen-card {
+  border-radius: 10px;
+  padding: 12px;
+  background: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.resumen-titulo {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: #6c757d;
+}
+
+.resumen-valor {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+}

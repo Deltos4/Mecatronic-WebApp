@@ -1,0 +1,143 @@
+<div class="inv-page">
+
+  <div class="inv-head">
+    <div>
+      <h2 class="mb-1">Proveedores</h2>
+      <div class="text-muted">Registra proveedores para compras y control.</div>
+    </div>
+    <button class="btn btn-primary" (click)="toggleForm()">
+      {{ showForm ? 'Cerrar' : '+ Nuevo proveedor' }}
+    </button>
+  </div>
+
+  <!-- BUSCAR -->
+  <div class="card p-3 shadow-sm mt-3">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label">Buscar</label>
+        <input class="form-control" [(ngModel)]="filtro"
+               placeholder="Nombre, RUC, teléfono o correo">
+      </div>
+      <div class="col-md-6 text-md-end">
+        <small class="text-muted">{{ proveedoresFiltrados.length }} proveedor(es)</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div *ngIf="showForm" class="card p-3 shadow-sm mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">{{ editingId == null ? 'Registrar proveedor' : 'Editar proveedor' }}</h5>
+      <button *ngIf="editingId != null" class="btn btn-outline-secondary btn-sm" (click)="cancelarEdicion()">
+        Cancelar edición
+      </button>
+    </div>
+
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label class="form-label">Nombre / Razón social <span class="text-danger">*</span></label>
+        <input class="form-control" [(ngModel)]="form.nombre_proveedor"
+               placeholder="Ej: Repuestos Automotriz Perú SAC"
+               maxlength="150">
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Tipo documento</label>
+        <select class="form-select" [(ngModel)]="tipoDocProveedor">
+          <option value="RUC">RUC (11 dígitos)</option>
+          <option value="DNI">DNI (8 dígitos)</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">N° Documento</label>
+        <input class="form-control" [(ngModel)]="form.numero_documento_proveedor"
+               [placeholder]="tipoDocProveedor === 'RUC' ? '11 dígitos' : '8 dígitos'"
+               [maxlength]="tipoDocProveedor === 'RUC' ? 11 : 8"
+               pattern="[0-9]+">
+        <div class="form-text text-muted">
+          {{ tipoDocProveedor === 'RUC' ? 'RUC: 11 dígitos.' : 'DNI: 8 dígitos.' }}
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Persona de contacto</label>
+        <input class="form-control" [(ngModel)]="form.contacto_proveedor"
+               placeholder="Ej: Juan Pérez" maxlength="100">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Celular / Teléfono</label>
+        <div class="input-group">
+          <span class="input-group-text">🇵🇪 +51</span>
+          <input class="form-control" [(ngModel)]="form.telefono_proveedor"
+                 placeholder="9XXXXXXXX ó 01XXXXXXX"
+                 pattern="[0-9]{7,9}" maxlength="9">
+        </div>
+        <div class="form-text text-muted">Celular (9 dígitos) o fijo (7 dígitos).</div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Correo</label>
+        <input type="email" class="form-control" [(ngModel)]="form.correo_proveedor"
+               placeholder="contacto@empresa.com" maxlength="100">
+      </div>
+
+      <div class="col-md-12">
+        <label class="form-label">Dirección</label>
+        <input class="form-control" [(ngModel)]="form.direccion_proveedor"
+               placeholder="Ej: Av. Industrial 1234, Lima" maxlength="255">
+      </div>
+
+      <div class="col-md-12 d-grid">
+        <button class="btn btn-success" (click)="guardarProveedor()">
+          {{ editingId == null ? 'Guardar proveedor' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARGA / ERROR -->
+  <div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
+  <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+
+  <!-- LISTA -->
+  <div class="card p-3 shadow-sm mt-3">
+    <h5 class="mb-3">Lista de proveedores</h5>
+    <div *ngIf="proveedoresFiltrados.length === 0 && !cargando" class="alert alert-info mb-0">
+      No hay proveedores registrados.
+    </div>
+    <div class="table-responsive" *ngIf="proveedoresFiltrados.length > 0">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Nombre / Razón social</th><th>N° Documento</th><th>Contacto</th>
+            <th>Teléfono</th><th>Correo</th><th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of proveedoresFiltrados">
+            <td>
+              <div class="fw-semibold">{{ p.nombre_proveedor }}</div>
+              <div class="text-muted small">{{ p.direccion_proveedor || '—' }}</div>
+            </td>
+            <td>{{ p.numero_documento_proveedor || '—' }}</td>
+            <td>{{ p.contacto_proveedor || '—' }}</td>
+            <td>{{ p.telefono_proveedor ? '+51 ' + p.telefono_proveedor : '—' }}</td>
+            <td>{{ p.correo_proveedor || '—' }}</td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-2">
+                <button class="btn btn-outline-primary btn-sm" (click)="editar(p)">Editar</button>
+                <button class="btn btn-outline-danger btn-sm" (click)="eliminar(p.id_proveedor)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
