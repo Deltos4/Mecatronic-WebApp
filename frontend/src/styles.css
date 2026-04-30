@@ -17,13 +17,12 @@ body{
    CONTENIDO
 ========================= */
 main{
-  max-width: 1400px;   /* antes 1000 */
   width: 100%;
-  margin: 20px auto 40px auto;
-  background-color: #ffffff;
-  padding: 20px 30px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  border-radius: 6px;
+  margin: 0;
+  background-color: transparent;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
 }
 
 

@@ -1,18 +1,18 @@
 <div class="catalogo-page">
 
   <!-- TOAST CARRITO -->
-  <div *ngIf="mensajeCarrito" style="position:fixed;top:20px;right:20px;z-index:9999;
-    background:#2e7d32;color:#fff;padding:14px 24px;border-radius:10px;
-    box-shadow:0 4px 16px rgba(0,0,0,0.2);font-weight:500;font-size:15px;
-    animation: fadeIn 0.3s ease;">
-    {{ mensajeCarrito }}
+  <div *ngIf="mensajeCarrito" class="toast-carrito">
+    <span>{{ mensajeCarrito }}</span>
+    <button type="button" class="toast-close" (click)="cerrarMensajeCarrito()" aria-label="Cerrar">
+      ×
+    </button>
   </div>
 
   <!-- HERO -->
   <div class="catalogo-hero mb-4">
     <div class="text-center py-4">
-      <h2 class="fw-bold mb-1">🔧 Catálogo Mecatronic Motors</h2>
-      <p class="text-muted mb-0">Servicios de taller y repuestos automotrices de calidad</p>
+      <h2 class="fw-bold mb-1">Catálogo Mecatronic Motors</h2>
+      <p class="text-muted mb-0">Servicios profesionales y productos automotrices por categoría</p>
     </div>
   </div>
 
@@ -25,10 +25,10 @@
       🔩 Servicios
     </button>
     <button class="btn btn-lg px-4"
-            [class.btn-primary]="tabActiva==='repuestos'"
-            [class.btn-outline-primary]="tabActiva!=='repuestos'"
-            (click)="tabActiva='repuestos'">
-      🛒 Repuestos
+            [class.btn-primary]="tabActiva==='productos'"
+            [class.btn-outline-primary]="tabActiva!=='productos'"
+            (click)="tabActiva='productos'">
+      🛒 Productos
     </button>
   </div>
 
@@ -36,21 +36,30 @@
   <div class="card shadow-sm mb-4 filter-card">
     <div class="card-body">
       <div class="row g-2 align-items-end">
-        <div class="col-md-5">
+        <div class="col-lg-3 col-md-6">
           <label class="form-label fw-semibold">🔍 Buscar</label>
           <input type="text" class="form-control form-control-lg"
                  placeholder="Nombre o descripción..."
                  [(ngModel)]="filtroTexto">
         </div>
-        <div class="col-md-2">
+        <div class="col-lg-3 col-md-6" *ngIf="tabActiva === 'productos'">
+          <label class="form-label fw-semibold">Categoría</label>
+          <select class="form-select form-select-lg" [(ngModel)]="filtroCategoria">
+            <option value="">Todas</option>
+            <option *ngFor="let categoria of categoriasProductos" [value]="categoria">
+              {{ categoria }}
+            </option>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-6">
           <label class="form-label fw-semibold">Precio mín. (S/)</label>
           <input type="number" class="form-control" [(ngModel)]="precioMin" placeholder="0">
         </div>
-        <div class="col-md-2">
+        <div class="col-lg-2 col-md-6">
           <label class="form-label fw-semibold">Precio máx. (S/)</label>
           <input type="number" class="form-control" [(ngModel)]="precioMax" placeholder="9999">
         </div>
-        <div class="col-md-3 d-grid">
+        <div class="col-lg-2 col-md-12 d-grid">
           <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
             ✕ Limpiar filtros
           </button>
@@ -101,9 +110,9 @@
   </div>
 
   <!-- ===== REPUESTOS ===== -->
-  <div *ngIf="tabActiva==='repuestos'">
+  <div *ngIf="tabActiva==='productos'">
     <div class="row g-4">
-      <div class="col-md-4 col-sm-6" *ngFor="let r of repuestosFiltrados">
+      <div class="col-md-4 col-sm-6" *ngFor="let r of productosFiltrados">
         <div class="card h-100 catalog-card shadow-sm">
 
           <!-- Imagen del producto -->
@@ -117,7 +126,7 @@
 
           <div class="card-body d-flex flex-column">
             <h5 class="card-title fw-bold">{{ r.nombre }}</h5>
-            <p class="card-text text-muted small item-desc">{{ r.descripcion || 'Repuesto automotriz de calidad.' }}</p>
+            <p class="card-text text-muted small item-desc">{{ r.descripcion || 'Producto automotriz de calidad.' }}</p>
 
             <div class="mt-auto">
               <div class="d-flex justify-content-between align-items-center mb-2">
@@ -127,9 +136,9 @@
                 </span>
               </div>
               <button class="btn btn-success w-100"
-                      [disabled]="r.stock === 0"
-                      (click)="agregarRepuestoAlCarrito(r)">
-                🛒 {{ r.stock > 0 ? 'Agregar al carrito' : 'Sin stock' }}
+                      [disabled]="r.stock <= 0"
+                      (click)="agregarProductoAlCarrito(r)">
+                🛒 Agregar
               </button>
             </div>
           </div>
@@ -137,7 +146,7 @@
         </div>
       </div>
 
-      <div *ngIf="repuestosFiltrados.length === 0" class="col-12">
+      <div *ngIf="productosFiltrados.length === 0" class="col-12">
         <div class="text-center py-5 text-muted">
           <div style="font-size:48px">🔍</div>
           <p class="mt-2">No se encontraron productos con esos filtros.</p>

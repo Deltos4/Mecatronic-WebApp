@@ -37,29 +37,29 @@
                    placeholder="ejemplo@correo.com" required>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Celular</label>
-            <div class="input-group">
-              <span class="input-group-text">🇵🇪 +51</span>
-              <input type="text" class="form-control"
-                     [(ngModel)]="telefono" name="telefono"
-                     placeholder="9XXXXXXXX"
-                     pattern="9[0-9]{8}" maxlength="9">
-            </div>
-            <div class="form-text text-muted">Opcional. 9 dígitos, empieza con 9.</div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Contraseña <span class="text-danger">*</span></label>
-            <div class="input-group">
-              <input [type]="verPass ? 'text' : 'password'" class="form-control"
-                     [(ngModel)]="password" name="password"
-                     placeholder="Mínimo 8 caracteres" minlength="8" required>
-              <button type="button" class="btn btn-outline-secondary" (click)="verPass = !verPass">
-                {{ verPass ? '🙈' : '👁️' }}
-              </button>
-            </div>
-            <div class="form-text">
+           <div class="mb-3">
+             <label class="form-label">Contraseña <span class="text-danger">*</span></label>
+             <div class="input-group">
+               <input [type]="verPass ? 'text' : 'password'" class="form-control"
+                      [(ngModel)]="password" name="password"
+                      placeholder="Mínimo 8 caracteres" minlength="8" required>
+               <button
+                 type="button"
+                 class="btn btn-outline-secondary password-toggle"
+                 (click)="verPass = !verPass"
+                 [attr.aria-label]="verPass ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                 <svg *ngIf="!verPass" viewBox="0 0 24 24" aria-hidden="true">
+                   <path d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                   <circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                 </svg>
+                 <svg *ngIf="verPass" viewBox="0 0 24 24" aria-hidden="true">
+                   <path d="M3 5.5 21 18.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                   <path d="M2 12s3.6-6.5 10-6.5c2.2 0 4.1.7 5.7 1.7M22 12s-3.6 6.5-10 6.5c-2.5 0-4.6-.8-6.2-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                   <path d="M9.8 9.9a3.5 3.5 0 0 0 4.3 4.3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                 </svg>
+               </button>
+             </div>
+             <div class="form-text">
               La contraseña debe tener:
               <span [style.color]="password.length >= 8 ? 'green' : 'gray'"> ✔ Mín. 8 caracteres</span> &nbsp;
               <span [style.color]="tieneMayuscula ? 'green' : 'gray'"> ✔ Mayúscula</span> &nbsp;
@@ -68,20 +68,37 @@
             </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Confirmar contraseña <span class="text-danger">*</span></label>
-            <div class="input-group">
-              <input [type]="verPass2 ? 'text' : 'password'" class="form-control"
-                     [(ngModel)]="password2" name="password2"
-                     placeholder="Repite tu contraseña" minlength="8" required>
-              <button type="button" class="btn btn-outline-secondary" (click)="verPass2 = !verPass2">
-                {{ verPass2 ? '🙈' : '👁️' }}
-              </button>
-            </div>
-          </div>
+           <div class="mb-3">
+             <label class="form-label">Confirmar contraseña <span class="text-danger">*</span></label>
+             <div class="input-group">
+               <input [type]="verPass2 ? 'text' : 'password'" class="form-control"
+                      [(ngModel)]="password2" name="password2"
+                      placeholder="Repite tu contraseña" minlength="8" required>
+               <button
+                 type="button"
+                 class="btn btn-outline-secondary password-toggle"
+                 (click)="verPass2 = !verPass2"
+                 [attr.aria-label]="verPass2 ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                 <svg *ngIf="!verPass2" viewBox="0 0 24 24" aria-hidden="true">
+                   <path d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                   <circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                 </svg>
+                 <svg *ngIf="verPass2" viewBox="0 0 24 24" aria-hidden="true">
+                   <path d="M3 5.5 21 18.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                   <path d="M2 12s3.6-6.5 10-6.5c2.2 0 4.1.7 5.7 1.7M22 12s-3.6 6.5-10 6.5c-2.5 0-4.6-.8-6.2-2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                   <path d="M9.8 9.9a3.5 3.5 0 0 0 4.3 4.3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                 </svg>
+               </button>
+             </div>
+           </div>
 
-          <div *ngIf="errorMessage" class="alert alert-danger py-2">{{ errorMessage }}</div>
-          <div *ngIf="okMessage"    class="alert alert-success py-2">{{ okMessage }}</div>
+           <div *ngIf="errorMessages.length" class="alert alert-danger py-2">
+             <div class="fw-semibold">Revisa los datos antes de continuar:</div>
+             <ul class="mb-0">
+               <li *ngFor="let error of errorMessages">{{ error }}</li>
+             </ul>
+           </div>
+           <div *ngIf="okMessage"    class="alert alert-success py-2">{{ okMessage }}</div>
 
           <button type="submit" class="btn btn-primary w-100" [disabled]="cargando">
             {{ cargando ? 'Creando cuenta...' : 'Crear cuenta' }}
