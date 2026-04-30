@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -28,7 +27,6 @@ export class RegistroComponent {
 
   constructor(
     private router: Router,
-    private api: ApiService,
     private authService: AuthService
   ) {}
 
@@ -89,12 +87,6 @@ export class RegistroComponent {
     this.cargando = true;
 
     try {
-      const existe = await this.verificarCorreoExiste(correo);
-      if (existe) {
-        this.errorMessages = ['Ese correo ya está registrado.'];
-        return;
-      }
-
       await firstValueFrom(this.authService.register({
         IdRol: 4,
         NombreUsuario: `${nombre} ${apellido}`.trim(),
@@ -113,15 +105,6 @@ export class RegistroComponent {
       }
     } finally {
       this.cargando = false;
-    }
-  }
-
-  private async verificarCorreoExiste(correo: string): Promise<boolean> {
-    try {
-      const usuarios = await firstValueFrom(this.api.get<any[]>('usuarios'));
-      return usuarios.some((u) => (u.correo_usuario ?? '').toLowerCase() === correo);
-    } catch {
-      return false;
     }
   }
 }

@@ -168,20 +168,20 @@ export class CatalogoComponent implements OnInit {
 
   // Toast visual en vez de alert feo
   mensajeCarrito = '';
-  private mensajeCarritoTimeout: ReturnType<typeof setTimeout> | null = null;
+  private mensajeCarritoTimeout: number | null = null;
   mostrarMensajeCarrito(nombre: string): void {
     this.mensajeCarrito = `✅ "${nombre}" agregado al carrito`;
-    if (this.mensajeCarritoTimeout) {
+    if (this.mensajeCarritoTimeout !== null) {
       clearTimeout(this.mensajeCarritoTimeout);
     }
-    this.mensajeCarritoTimeout = setTimeout(() => {
+    this.mensajeCarritoTimeout = window.setTimeout(() => {
       this.mensajeCarrito = '';
     }, 4000);
   }
 
   cerrarMensajeCarrito(): void {
     this.mensajeCarrito = '';
-    if (this.mensajeCarritoTimeout) {
+    if (this.mensajeCarritoTimeout !== null) {
       clearTimeout(this.mensajeCarritoTimeout);
       this.mensajeCarritoTimeout = null;
     }
