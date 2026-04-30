@@ -28,6 +28,7 @@ import { MisServiciosComponent } from './cliente_web/mis-servicios/mis-servicios
 import { MisPedidosComponent } from './cliente_web/mis-pedidos/mis-pedidos';
 import { PerfilComponent } from './cliente_web/perfil/perfil';
 import { RegistroComponent } from './cliente_web/registro/registro';
+import { Landing } from './cliente_web/landing/landing';
 
 // ===== AUTH =====
 import { LoginComponent } from './auth/login/login';
@@ -42,7 +43,7 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'catalogo', component: CatalogoComponent }, // público sin login
   { path: 'carrito', component: CarritoComponent },    // público sin login
-  { path: '', redirectTo: 'catalogo', pathMatch: 'full' }, // home = catálogo
+  { path: '', component: Landing }, // home = landing
 
   // ===== CLIENTE (requiere login) =====
   {
@@ -116,5 +117,5 @@ export const routes: Routes = [
   },
 
   // ===== DEFAULT =====
-  { path: '**', redirectTo: 'catalogo' },
+  { path: '**', redirectTo: '' },
 ];

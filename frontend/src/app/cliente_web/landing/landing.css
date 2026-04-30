@@ -1,0 +1,140 @@
+.landing-hero {
+  background: linear-gradient(120deg, #0f172a 0%, #1e293b 55%, #2563eb 100%);
+  color: #ffffff;
+  padding: 64px 0;
+}
+
+.hero-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.hero-text {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.hero-stats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.stat-label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.hero-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+}
+
+.hero-image {
+  width: 100%;
+  max-width: 420px;
+  object-fit: contain;
+}
+
+.hero-card-info {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.landing-section {
+  padding: 56px 0;
+}
+
+.landing-alt {
+  background: #f8fafc;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-header h2 {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.feature-card,
+.highlight-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  height: 100%;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.feature-card h5 {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.highlight-card h6 {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.landing-cta {
+  padding: 48px 0 72px;
+}
+
+.cta-card {
+  background: #111827;
+  color: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .hero-stats {
+    gap: 12px;
+  }
+
+  .cta-card {
+    text-align: center;
+    justify-content: center;
+  }
+}

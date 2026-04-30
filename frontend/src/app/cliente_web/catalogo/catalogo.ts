@@ -18,7 +18,7 @@ export class CatalogoComponent implements OnInit {
   servicios: any[] = [];
   cargando = false;
 
-  tabActiva: 'servicios' | 'repuestos' = 'servicios';
+  tabActiva: 'servicios' | 'productos' = 'servicios';
   filtroTexto = '';
   filtroCategoria = '';
   precioMin: number | null = null;
@@ -49,10 +49,13 @@ export class CatalogoComponent implements OnInit {
     });
   }
 
-  get categorias(): string[] {
-    const lista = this.tabActiva === 'servicios' ? this.servicios : this.productos;
-    const set = new Set(lista.map((x: any) => x.categoria ?? '').filter(Boolean));
-    return Array.from(set);
+  get categoriasProductos(): string[] {
+    const set = new Set(
+      this.productos
+        .map((x: any) => x.nombre_categoria_producto ?? x.categoria ?? '')
+        .filter(Boolean)
+    );
+    return Array.from(set).sort();
   }
 
   get serviciosFiltrados(): any[] {
@@ -77,23 +80,26 @@ export class CatalogoComponent implements OnInit {
     }));
   }
 
-  get repuestosFiltrados(): any[] {
+  get productosFiltrados(): any[] {
     return this.productos.filter(p => {
       const texto = this.filtroTexto.trim().toLowerCase();
       const coincide = !texto ||
         (p.nombre_producto ?? '').toLowerCase().includes(texto) ||
         (p.descripcion_producto ?? '').toLowerCase().includes(texto);
+      const categoria = (p.nombre_categoria_producto ?? p.categoria ?? '').toString().toLowerCase();
+      const categoriaOk = !this.filtroCategoria || categoria === this.filtroCategoria.toLowerCase();
       const precio = p.precio_producto ?? 0;
       const minOk = this.precioMin === null || precio >= this.precioMin;
       const maxOk = this.precioMax === null || precio <= this.precioMax;
-      return coincide && minOk && maxOk;
+      return coincide && categoriaOk && minOk && maxOk;
     }).map(p => ({
       ...p,
       nombre: p.nombre_producto,
       descripcion: p.descripcion_producto,
       precio: p.precio_producto,
       imagen: p.imagen_url,
-      stock: p.stock_producto,
+      stock: p.stock_producto ?? 0,
+      categoria: p.nombre_categoria_producto ?? p.categoria ?? '',
       id: p.id_producto
     }));
   }
@@ -133,7 +139,7 @@ export class CatalogoComponent implements OnInit {
     this.router.navigate(['/cliente/citas/nueva', servicio.id]);
   }
 
-  agregarRepuestoAlCarrito(producto: any): void {
+  agregarProductoAlCarrito(producto: any): void {
     // Se puede agregar al carrito SIN estar logueado
     // El login se pide recién al momento de pagar
     const carrito = JSON.parse(localStorage.getItem('carrito') ?? '[]');
@@ -162,9 +168,23 @@ export class CatalogoComponent implements OnInit {
 
   // Toast visual en vez de alert feo
   mensajeCarrito = '';
+  private mensajeCarritoTimeout: ReturnType<typeof setTimeout> | null = null;
   mostrarMensajeCarrito(nombre: string): void {
     this.mensajeCarrito = `✅ "${nombre}" agregado al carrito`;
-    setTimeout(() => this.mensajeCarrito = '', 3000);
+    if (this.mensajeCarritoTimeout !== null) {
+      clearTimeout(this.mensajeCarritoTimeout);
+    }
+    this.mensajeCarritoTimeout = setTimeout(() => {
+      this.mensajeCarrito = '';
+    }, 4000);
+  }
+
+  cerrarMensajeCarrito(): void {
+    this.mensajeCarrito = '';
+    if (this.mensajeCarritoTimeout !== null) {
+      clearTimeout(this.mensajeCarritoTimeout);
+      this.mensajeCarritoTimeout = null;
+    }
   }
 
   irALogin(): void {

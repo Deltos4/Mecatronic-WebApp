@@ -28,3 +28,15 @@
 .alert{
   border-radius: 10px;
 }
+
+.password-toggle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+}
+
+.password-toggle svg{
+  width: 18px;
+  height: 18px;
+}
