@@ -136,7 +136,7 @@
                 </span>
               </div>
               <button class="btn btn-success w-100"
-                      [disabled]="r.stock <= 0"
+                      [disabled]="r.stock < 1"
                       (click)="agregarProductoAlCarrito(r)">
                 🛒 Agregar
               </button>
