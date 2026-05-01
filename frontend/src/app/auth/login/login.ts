@@ -27,14 +27,22 @@ export class LoginComponent {
   onSubmit(): void {
     this.errorMessage = null;
 
-    if (!this.CorreoUsuario.trim() || !this.Contrasena.trim()) {
+    const correo = this.CorreoUsuario.trim().toLowerCase();
+    const contrasena = this.Contrasena.trim();
+
+    if (!correo || !contrasena) {
       this.errorMessage = 'Ingresa tu correo y contraseña.';
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      this.errorMessage = 'El correo está mal ingresado.';
       return;
     }
 
     this.cargando = true;
 
-    this.authService.login(this.CorreoUsuario.trim(), this.Contrasena.trim()).subscribe({
+    this.authService.login(correo, contrasena).subscribe({
       next: (response) => {
         console.log('Respuesta del servidor:', response);
 
@@ -64,8 +72,15 @@ export class LoginComponent {
         setTimeout(() => {
           this.cargando = false;
 
-          if (err.status === 401 || err.status === 500) {
-            this.errorMessage = 'Correo o contraseña incorrectos.';
+          const code = err?.error?.code as string | undefined;
+          const message = (err?.error?.message ?? '').toString();
+
+          if (err.status === 404 || code === 'user_not_found') {
+            this.errorMessage = 'Usuario no encontrado.';
+          } else if (err.status === 401 || code === 'invalid_password') {
+            this.errorMessage = 'Contraseña incorrecta.';
+          } else if (err.status === 400 && message) {
+            this.errorMessage = message;
           } else if (err.status === 403 && err.error?.sin_verificar) {
             this.errorMessage = '⚠️ Debes verificar tu correo...';
           } else {

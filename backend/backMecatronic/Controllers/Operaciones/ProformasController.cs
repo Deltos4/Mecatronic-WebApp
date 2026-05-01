@@ -31,6 +31,12 @@ namespace backMecatronic.Controllers.Operaciones
             return Ok(proforma);
         }
 
+        [HttpGet("cliente/{idCliente}")]
+        public async Task<IActionResult> GetByCliente(int idCliente)
+        {
+            return Ok(await _service.ObtenerProformasPorCliente(idCliente));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Crear(ProformaCreateDto dto)
         {

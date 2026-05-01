@@ -2,6 +2,7 @@
 using backMecatronic.Data;
 using backMecatronic.Models.Entities.Seguridad;
 using backMecatronic.Models.DTOs.Seguridad;
+using backMecatronic.Models.Entities.Clientes;
 
 public class AuthService : IAuthService
 {
@@ -20,7 +21,7 @@ public class AuthService : IAuthService
             .AnyAsync(u => u.CorreoUsuario == dto.CorreoUsuario);
 
         if (existe)
-            throw new Exception("Correo ya registrado");
+            throw new InvalidOperationException("Correo ya registrado");
 
         var hash = BCrypt.Net.BCrypt.HashPassword(dto.Contrasena);
 
@@ -34,8 +35,28 @@ public class AuthService : IAuthService
             FechaRegistro = DateTime.Now
         };
 
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+
         _context.Usuario.Add(usuario);
         await _context.SaveChangesAsync();
+
+        var (nombre, apellido) = SplitNombre(dto.NombreUsuario);
+
+        var cliente = new Cliente
+        {
+            IdUsuario = usuario.IdUsuario,
+            IdTipoDocumento = 1,
+            NumeroDocumentoCliente = string.Empty,
+            NombreCliente = nombre,
+            ApellidoCliente = apellido,
+            FechaRegistro = DateTime.UtcNow,
+            EstadoCliente = true
+        };
+
+        _context.Cliente.Add(cliente);
+        await _context.SaveChangesAsync();
+
+        await transaction.CommitAsync();
 
         return new UsuarioResponseDto
         {
@@ -50,23 +71,40 @@ public class AuthService : IAuthService
     {
         var usuario = await _context.Usuario
             .Include(u => u.Rol)
+            .Include(u => u.Cliente)
             .FirstOrDefaultAsync(u => u.CorreoUsuario == dto.CorreoUsuario);
 
         if (usuario == null)
-            throw new Exception("Usuario no encontrado");
+            throw new KeyNotFoundException("Usuario no encontrado");
 
         var valid = BCrypt.Net.BCrypt.Verify(dto.Contrasena, usuario.ContrasenaUsuario);
 
         if (!valid)
-            throw new Exception("Contraseña incorrecta");
+            throw new UnauthorizedAccessException("Contraseña incorrecta");
 
         var token = _jwtHelper.GenerateToken(usuario);
 
         return new AuthResponseDto
         {
+            IdUsuario = usuario.IdUsuario,
+            IdCliente = usuario.Cliente?.IdCliente,
             Token = token,
             NombreUsuario = usuario.NombreUsuario,
+            CorreoUsuario = usuario.CorreoUsuario,
             Rol = usuario.Rol.NombreRol
         };
+    }
+
+    private static (string Nombre, string Apellido) SplitNombre(string nombreCompleto)
+    {
+        var cleaned = (nombreCompleto ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(cleaned))
+            return ("", "");
+
+        var partes = cleaned.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (partes.Length == 1)
+            return (partes[0], "");
+
+        return (partes[0], string.Join(' ', partes.Skip(1)));
     }
 }

@@ -6,8 +6,11 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  IdUsuario: number;
+  IdCliente?: number | null;
   Token: string;
   NombreUsuario: string;
+  CorreoUsuario: string;
   Rol: string;
 }
 
@@ -19,6 +22,8 @@ export interface RegisterRequest {
 }
 
 export interface UsuarioSesion {
+  IdUsuario?: number;
+  IdCliente?: number | null;
   NombreUsuario: string;
   Rol: RolUsuario;
   // Optional fields populated from profile data
