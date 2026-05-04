@@ -210,7 +210,7 @@ export class PagoComponent implements OnInit {
         alert(this.metodoEntrega === 'CITA'
           ? 'Pago registrado ✅ Cita generada ✅'
           : 'Pago registrado ✅ Pedido generado ✅');
-        this.router.navigateByUrl(this.metodoEntrega === 'CITA' ? '/cliente/mis-servicios' : '/cliente/mis-pedidos');
+        this.router.navigateByUrl(this.metodoEntrega === 'CITA' ? '/cliente/mis-reservas' : '/cliente/mis-pedidos');
       },
       error: () => {
         this.cargando = false;

@@ -1,0 +1,80 @@
+<div class="card p-4 shadow-sm vehiculos-page">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+      <h3 class="mb-0">Mis vehículos</h3>
+      <small class="text-muted">Agrega y gestiona los vehículos asociados a tu cuenta.</small>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <h5 class="mb-3">Agregar vehículo</h5>
+
+      <div class="mb-3">
+        <label class="form-label">Placa <span class="text-danger">*</span></label>
+        <input class="form-control" [(ngModel)]="form.placa" placeholder="ABC-123">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Modelo <span class="text-danger">*</span></label>
+        <select class="form-select" [(ngModel)]="form.idModeloVehiculo">
+          <option [ngValue]="null">Selecciona modelo</option>
+          <option *ngFor="let m of modelos" [ngValue]="m.id_modelo_vehiculo">
+            {{ m.nombre_modelo_vehiculo }}
+          </option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Año</label>
+        <input class="form-control" type="number" [(ngModel)]="form.anio" placeholder="2024">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Color</label>
+        <input class="form-control" [(ngModel)]="form.color" placeholder="Rojo, Negro, Azul">
+      </div>
+
+      <button class="btn btn-primary w-100" (click)="guardar()" [disabled]="guardando">
+        {{ guardando ? 'Guardando...' : 'Registrar vehículo' }}
+      </button>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Vehículos registrados</h5>
+        <span class="badge bg-secondary">{{ vehiculos.length }}</span>
+      </div>
+
+      <div *ngIf="cargando" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted">Cargando vehículos...</p>
+      </div>
+
+      <div *ngIf="!cargando && vehiculos.length === 0" class="empty-card">
+        <div class="empty-icon">🚗</div>
+        <div>
+          <h6 class="mb-1">No tienes vehículos registrados</h6>
+          <p class="text-muted mb-0">Agrega tu primer vehículo para programar reservas y pedidos.</p>
+        </div>
+      </div>
+
+      <div *ngFor="let v of vehiculos" class="vehiculo-card">
+        <div>
+          <div class="fw-semibold">{{ v.placa_vehiculo }}</div>
+          <div class="text-muted small">
+            {{ v.nombre_marca }} · {{ v.nombre_modelo }} · {{ v.nombre_tipo }}
+          </div>
+          <div class="text-muted small" *ngIf="v.anio_vehiculo || v.color_vehiculo">
+            {{ v.anio_vehiculo ? 'Año ' + v.anio_vehiculo : '' }}
+            <span *ngIf="v.anio_vehiculo && v.color_vehiculo">·</span>
+            {{ v.color_vehiculo || '' }}
+          </div>
+        </div>
+        <button class="btn btn-outline-danger btn-sm" (click)="eliminar(v.id_vehiculo)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
