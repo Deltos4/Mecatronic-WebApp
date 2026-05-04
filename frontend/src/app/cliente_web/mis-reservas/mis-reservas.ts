@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/api.service';
 
 @Component({
-  selector: 'app-mis-servicios',
+  selector: 'app-mis-reservas',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './mis-servicios.html',
-  styleUrls: ['./mis-servicios.css'],
+  templateUrl: './mis-reservas.html',
+  styleUrls: ['./mis-reservas.css'],
 })
-export class MisServiciosComponent implements OnInit {
+export class MisReservasComponent implements OnInit {
 
   citas: any[] = [];
   cargando = false;
@@ -59,7 +59,7 @@ export class MisServiciosComponent implements OnInit {
             this.cargando = false;
             this.cdr.detectChanges();
           },
-          error: () => { this.error = 'Error al cargar servicios.'; this.cargando = false; this.cdr.detectChanges(); }
+          error: () => { this.error = 'Error al cargar reservas.'; this.cargando = false; this.cdr.detectChanges(); }
         });
       }
     });
@@ -75,11 +75,11 @@ export class MisServiciosComponent implements OnInit {
     });
   }
 
-  cancelarCita(id: number): void {
+  cancelarReserva(id: number): void {
     const cita = this.citas.find(c => c.id === id);
     if (!cita) return;
     if (cita.estado === 'Cancelada' || cita.estado === 'Atendida' || cita.estado === 'Completada') return;
-    if (!confirm('¿Cancelar este servicio?')) return;
+    if (!confirm('¿Cancelar esta reserva?')) return;
 
     this.api.cancelarReserva(id).subscribe({
       next: () => {

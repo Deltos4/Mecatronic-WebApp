@@ -6,13 +6,13 @@ import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
-  selector: 'app-citas',
+  selector: 'app-reservas',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './citas.html',
-  styleUrls: ['./citas.css']
+  templateUrl: './reservas.html',
+  styleUrls: ['./reservas.css']
 })
-export class CitasComponent implements OnInit {
+export class ReservasComponent implements OnInit {
 
   cargando = false;
 
@@ -219,5 +219,5 @@ export class CitasComponent implements OnInit {
 
   volverCatalogo(): void { this.router.navigate(['/catalogo']); }
   volverPaso(p: number): void { this.paso = p; }
-  irAMisCitas(): void { this.router.navigate(['/cliente/mis-servicios']); }
+  irAMisReservas(): void { this.router.navigate(['/cliente/mis-reservas']); }
 }

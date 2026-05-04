@@ -21,6 +21,12 @@ namespace backMecatronic.Controllers.Clientes
             return Ok(await _service.ObtenerVehiculos());
         }
 
+        [HttpGet("cliente/{idCliente}")]
+        public async Task<IActionResult> GetVehiculosCliente(int idCliente)
+        {
+            return Ok(await _service.ObtenerVehiculosPorCliente(idCliente));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehiculo(int id)
         {

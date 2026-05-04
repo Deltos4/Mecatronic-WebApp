@@ -17,8 +17,32 @@ public class AuthService : IAuthService
 
     public async Task<UsuarioResponseDto> Registrar(RegisterDto dto)
     {
+        if (dto == null)
+            throw new ArgumentException("Datos de registro inválidos.");
+
+        var correo = (dto.CorreoUsuario ?? string.Empty).Trim().ToLowerInvariant();
+        var nombreUsuario = (dto.NombreUsuario ?? string.Empty).Trim();
+
+        if (string.IsNullOrWhiteSpace(correo) || string.IsNullOrWhiteSpace(nombreUsuario))
+            throw new ArgumentException("El nombre y correo son obligatorios.");
+
+        if (string.IsNullOrWhiteSpace(dto.Contrasena))
+            throw new ArgumentException("La contraseña es obligatoria.");
+
+        var rolId = dto.IdRol;
+        if (rolId <= 0)
+        {
+            rolId = await _context.Rol
+                .Where(r => r.NombreRol == "Cliente")
+                .Select(r => r.IdRol)
+                .FirstOrDefaultAsync();
+        }
+
+        if (rolId <= 0)
+            throw new ArgumentException("Rol de cliente no disponible.");
+
         var existe = await _context.Usuario
-            .AnyAsync(u => u.CorreoUsuario == dto.CorreoUsuario);
+            .AnyAsync(u => u.CorreoUsuario == correo);
 
         if (existe)
             throw new InvalidOperationException("Correo ya registrado");
@@ -27,43 +51,51 @@ public class AuthService : IAuthService
 
         var usuario = new Usuario
         {
-            IdRol = dto.IdRol,
-            NombreUsuario = dto.NombreUsuario,
-            CorreoUsuario = dto.CorreoUsuario,
+            IdRol = rolId,
+            NombreUsuario = nombreUsuario,
+            CorreoUsuario = correo,
             ContrasenaUsuario = hash,
             EstadoUsuario = true,
-            FechaRegistro = DateTime.Now
+            FechaRegistro = DateTime.UtcNow
         };
 
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-
-        _context.Usuario.Add(usuario);
-        await _context.SaveChangesAsync();
-
-        var (nombre, apellido) = SplitNombre(dto.NombreUsuario);
+        var (nombre, apellido) = SplitNombre(nombreUsuario);
 
         var cliente = new Cliente
         {
-            IdUsuario = usuario.IdUsuario,
             IdTipoDocumento = 1,
             NumeroDocumentoCliente = string.Empty,
             NombreCliente = nombre,
             ApellidoCliente = apellido,
             FechaRegistro = DateTime.UtcNow,
-            EstadoCliente = true
+            EstadoCliente = true,
+            Usuario = usuario
         };
 
+        _context.Usuario.Add(usuario);
         _context.Cliente.Add(cliente);
-        await _context.SaveChangesAsync();
 
-        await transaction.CommitAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            throw new Exception("No se pudo registrar el usuario.", ex);
+        }
+
+        var rolNombre = await _context.Rol
+            .Where(r => r.IdRol == rolId)
+            .Select(r => r.NombreRol)
+            .FirstOrDefaultAsync() ?? string.Empty;
 
         return new UsuarioResponseDto
         {
             IdUsuario = usuario.IdUsuario,
             NombreUsuario = usuario.NombreUsuario,
             CorreoUsuario = usuario.CorreoUsuario,
-            Rol = ""
+            Rol = rolNombre,
+            EstadoUsuario = usuario.EstadoUsuario
         };
     }
 

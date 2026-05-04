@@ -26,6 +26,10 @@ namespace backMecatronic.Controllers
             {
                 return Conflict(new { message = ex.Message, code = "email_exists" });
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, code = "invalid_input" });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message, code = "register_failed" });
