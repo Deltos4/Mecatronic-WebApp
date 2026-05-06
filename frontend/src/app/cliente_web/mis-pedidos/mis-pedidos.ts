@@ -79,11 +79,7 @@ export class MisPedidosComponent implements OnInit {
         }
       },
       error: () => {
-        if (pedido.estado_pedido !== undefined) {
-          pedido.estado_pedido = 'Cancelado';
-        } else {
-          pedido.estado = 'Cancelado';
-        }
+        this.error = 'No se pudo cancelar el pedido.';
       }
     });
   }

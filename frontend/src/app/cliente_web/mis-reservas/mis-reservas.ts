@@ -87,8 +87,7 @@ export class MisReservasComponent implements OnInit {
         cita.estado = 'Cancelada';
       },
       error: () => {
-        // Fallback: actualizar local
-        cita.estado = 'Cancelada';
+        this.error = 'No se pudo cancelar la reserva.';
       }
     });
   }

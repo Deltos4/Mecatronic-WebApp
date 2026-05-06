@@ -41,7 +41,7 @@ export class PerfilComponent implements OnInit {
     if (usuario) {
       this.perfil.nombre = usuario.nombre ?? '';
       this.perfil.apellido = (usuario as any).apellido ?? '';
-      this.perfil.telefono = (usuario as any).telefono ?? '';
+      this.perfil.telefono = ((usuario as any).telefono ?? '').toString();
       this.perfil.correo = (usuario as any).correo ?? usuario.correoUsuario ?? '';
     }
 
@@ -79,7 +79,7 @@ export class PerfilComponent implements OnInit {
     this.mensaje = '';
     this.error = '';
 
-    const dni = (this.perfil.numeroDocumento ?? '').toString().trim();
+    const dni = (this.perfil.numeroDocumento ?? '').trim();
 
     if (!/^\d{8}$/.test(dni)) {
       this.error = 'El DNI debe tener 8 dígitos.';
@@ -121,11 +121,11 @@ export class PerfilComponent implements OnInit {
     this.mensaje = '';
     this.error = '';
 
-    const nombre = (this.perfil.nombre ?? '').toString().trim();
-    const apellido = (this.perfil.apellido ?? '').toString().trim();
-    const numeroDocumento = (this.perfil.numeroDocumento ?? '').toString().trim();
-    const telefono = (this.perfil.telefono ?? '').toString().trim();
-    const direccion = (this.perfil.direccion ?? '').toString().trim();
+    const nombre = (this.perfil.nombre ?? '').trim();
+    const apellido = (this.perfil.apellido ?? '').trim();
+    const numeroDocumento = (this.perfil.numeroDocumento ?? '').trim();
+    const telefono = (this.perfil.telefono ?? '').trim();
+    const direccion = (this.perfil.direccion ?? '').trim();
 
     if (!nombre) { this.error = 'El nombre es obligatorio.'; return; }
     if (!apellido) { this.error = 'El apellido es obligatorio.'; return; }
