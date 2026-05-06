@@ -57,6 +57,7 @@ builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<JwtHelper>();
 
 builder.Services.AddHttpClient<INubeFactService, NubeFactService>();
+builder.Services.AddHttpClient<IApiPeruService, ApiPeruService>();
 
 // =====================
 // CONTROLLERS

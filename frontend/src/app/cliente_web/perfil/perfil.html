@@ -14,12 +14,34 @@
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
   <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Tipo de documento</label>
+      <select class="form-select" [(ngModel)]="perfil.idTipoDocumento">
+        <option *ngFor="let t of tiposDocumento" [value]="t.id_tipo_documento">
+          {{ t.nombre_tipo_documento }}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-5">
+      <label class="form-label">Número de documento</label>
+      <input class="form-control" [(ngModel)]="perfil.numeroDocumento" placeholder="Ingresa tu documento">
+      <small class="form-text text-muted">Puedes consultar tus datos si es DNI.</small>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button
+        class="btn btn-outline-primary w-100"
+        (click)="consultarDni()"
+        [disabled]="!esDni || consultandoDni"
+      >
+        {{ consultandoDni ? 'Consultando...' : 'Consultar DNI' }}
+      </button>
+    </div>
     <div class="col-md-6">
       <label class="form-label">Nombre <span class="text-danger">*</span></label>
       <input class="form-control" [(ngModel)]="perfil.nombre" placeholder="Ej: Juan">
     </div>
     <div class="col-md-6">
-      <label class="form-label">Apellido</label>
+      <label class="form-label">Apellido <span class="text-danger">*</span></label>
       <input class="form-control" [(ngModel)]="perfil.apellido" placeholder="Ej: Pérez García">
     </div>
     <div class="col-md-6">
@@ -48,7 +70,7 @@
   <div class="mt-4">
     <div class="alert alert-light border small mb-0">
       <strong>Atajos:</strong>
-      <a class="ms-2" routerLink="/cliente/mis-servicios">Mis servicios</a> ·
+      <a class="ms-2" routerLink="/cliente/mis-reservas">Mis reservas</a> ·
       <a class="ms-2" routerLink="/cliente/mis-pedidos">Mis pedidos</a>
     </div>
   </div>

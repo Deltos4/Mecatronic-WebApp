@@ -8,6 +8,21 @@
     </a>
 
     <div class="top-actions">
+      <a
+        *ngIf="role === 'Cliente' || role == null"
+        class="cart-link"
+        routerLink="/carrito"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 7H7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="19" r="1.7" fill="currentColor"/>
+          <circle cx="17" cy="19" r="1.7" fill="currentColor"/>
+        </svg>
+        <span *ngIf="cartCount > 0" class="cart-count">{{ cartCount }}</span>
+      </a>
+
       <a *ngIf="role == null" class="login-link" routerLink="/login" routerLinkActive="active">
         Iniciar sesión
       </a>
@@ -24,26 +39,24 @@
   <div class="app-body">
     <aside class="sidebar">
       <nav class="sidebar-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-
         <!-- ===== CATÁLOGO Y CARRITO (visitantes y clientes) ===== -->
         <a *ngIf="role === 'Cliente' || role == null" routerLink="/catalogo" routerLinkActive="active">
           Catálogo
         </a>
-        <a *ngIf="role === 'Cliente' || role == null" routerLink="/carrito" routerLinkActive="active">
-          Carrito
-          <span *ngIf="cartCount > 0" class="badge bg-success ms-1">
-            {{ cartCount }}
-          </span>
-        </a>
 
         <!-- ===== SOLO CLIENTE LOGUEADO ===== -->
-        <a *ngIf="role === 'Cliente'" routerLink="/cliente/citas" routerLinkActive="active">Citas</a>
-        <a *ngIf="role === 'Cliente'" routerLink="/cliente/mis-servicios" routerLinkActive="active">
-          Mis servicios
-        </a>
+        <a *ngIf="role === 'Cliente'" routerLink="/cliente/reservas" routerLinkActive="active">Reservas</a>
         <a *ngIf="role === 'Cliente'" routerLink="/cliente/mis-pedidos" routerLinkActive="active">
           Mis pedidos
+        </a>
+        <a *ngIf="role === 'Cliente'" routerLink="/cliente/mis-reservas" routerLinkActive="active">
+          Mis reservas
+        </a>
+        <a *ngIf="role === 'Cliente'" routerLink="/cliente/vehiculos" routerLinkActive="active">
+          Mis vehículos
+        </a>
+        <a *ngIf="role === 'Cliente'" routerLink="/cliente/proformas" routerLinkActive="active">
+          Proformas
         </a>
         <a *ngIf="role === 'Cliente'" routerLink="/cliente/perfil" routerLinkActive="active">
           Perfil

@@ -74,9 +74,11 @@ export class ApiService {
 
   // VEHÍCULOS
   getVehiculos()             { return this.get<any[]>('vehiculos'); }
+  getVehiculosCliente(idCliente: number) { return this.get<any[]>(`vehiculos/cliente/${idCliente}`); }
   createVehiculo(body: any)  { return this.post<any>('vehiculos', body); }
   updateVehiculo(id: number, body: any) { return this.put<any>(`vehiculos/${id}`, body); }
   deleteVehiculo(id: number) { return this.delete<void>(`vehiculos/${id}`); }
+  asignarVehiculoCliente(body: any) { return this.post<void>('vehiculos/asignar', body); }
 
   // SERVICIOS
   getServicios()             { return this.get<any[]>('servicios'); }
@@ -138,6 +140,7 @@ export class ApiService {
 
   // COMPROBANTES (BOLETA / FACTURA)
   getProformas()             { return this.get<any[]>('proformas'); }
+  getProformasCliente(idCliente: number) { return this.get<any[]>(`proformas/cliente/${idCliente}`); }
   createComprobante(body: any) { return this.post<any>('comprobantes/generar', body); }
 
   // TIPOS DE COMPROBANTE
@@ -145,6 +148,7 @@ export class ApiService {
 
   // TIPOS DE DOCUMENTO
   getTiposDocumento()        { return this.get<any[]>('maestros/tipos-documento'); }
+  consultarDni(dni: string)  { return this.get<any>(`clientes/consulta-dni/${dni}`); }
 
   // MARCAS / MODELOS / TIPOS VEHICULO
   getMarcasVehiculo()        { return this.get<any[]>('vehiculos/marcas'); }

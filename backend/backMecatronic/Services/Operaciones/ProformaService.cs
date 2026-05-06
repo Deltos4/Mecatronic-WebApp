@@ -43,6 +43,35 @@ namespace backMecatronic.Services.Operaciones
                 .ToListAsync();
         }
 
+        public async Task<List<ProformaResponseDto>> ObtenerProformasPorCliente(int idCliente)
+        {
+            return await _context.Proforma
+                .Include(p => p.Cliente)
+                .Include(p => p.Detalles)
+                    .ThenInclude(d => d.Producto)
+                .Include(p => p.Detalles)
+                    .ThenInclude(d => d.Servicio)
+                .Where(p => p.IdCliente == idCliente)
+                .Select(p => new ProformaResponseDto
+                {
+                    IdProforma = p.IdProforma,
+                    NombreCliente = p.Cliente.NombreCliente,
+                    FechaEmision = p.FechaEmision,
+                    FechaVencimiento = p.FechaVencimiento,
+                    Total = p.Total,
+                    Detalles = p.Detalles.Select(d => new DetalleProformaResponseDto
+                    {
+                        IdDetalleProforma = d.IdDetalleProforma,
+                        NombreProducto = d.Producto != null ? d.Producto.NombreProducto : null,
+                        NombreServicio = d.Servicio != null ? d.Servicio.NombreServicio : null,
+                        Cantidad = d.Cantidad,
+                        PrecioUnitario = d.PrecioUnitario,
+                        SubTotal = d.SubTotal
+                    }).ToList()
+                })
+                .ToListAsync();
+        }
+
         public async Task<ProformaResponseDto?> ObtenerProformaPorId(int id)
         {
             return await _context.Proforma

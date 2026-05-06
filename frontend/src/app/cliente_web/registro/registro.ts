@@ -97,9 +97,12 @@ export class RegistroComponent {
       this.okMessage = '¡Cuenta creada exitosamente! Redirigiendo al login...';
       setTimeout(() => this.router.navigateByUrl('/login'), 1500);
     } catch (err: any) {
-      const mensaje = (err?.error ?? '').toString().toLowerCase();
-      if (err?.status === 409 || mensaje.includes('correo')) {
+      const mensaje = (err?.error?.message ?? err?.error ?? '').toString();
+      const mensajeLower = mensaje.toLowerCase();
+      if (err?.status === 409 || mensajeLower.includes('correo')) {
         this.errorMessages = ['Ese correo ya está registrado.'];
+      } else if (mensaje) {
+        this.errorMessages = [mensaje];
       } else {
         this.errorMessages = ['Error al crear la cuenta. Intenta de nuevo.'];
       }

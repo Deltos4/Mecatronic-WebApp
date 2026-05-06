@@ -61,6 +61,32 @@ namespace backMecatronic.Services.Clientes
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<VehiculoDto>> ObtenerVehiculosPorCliente(int idCliente)
+        {
+            return await _context.DetalleVehiculoCliente
+                .Where(d => d.IdCliente == idCliente)
+                .Include(d => d.Vehiculo)
+                    .ThenInclude(v => v.ModeloVehiculo)
+                        .ThenInclude(m => m.MarcaVehiculo)
+                .Include(d => d.Vehiculo)
+                    .ThenInclude(v => v.ModeloVehiculo)
+                        .ThenInclude(m => m.TipoVehiculo)
+                .Select(d => new VehiculoDto
+                {
+                    IdVehiculo = d.Vehiculo.IdVehiculo,
+                    IdModeloVehiculo = d.Vehiculo.IdModeloVehiculo,
+                    NombreModelo = d.Vehiculo.ModeloVehiculo.NombreModeloVehiculo,
+                    NombreMarca = d.Vehiculo.ModeloVehiculo.MarcaVehiculo.NombreMarcaVehiculo,
+                    NombreTipo = d.Vehiculo.ModeloVehiculo.TipoVehiculo.NombreTipoVehiculo,
+                    PlacaVehiculo = d.Vehiculo.PlacaVehiculo,
+                    AnioVehiculo = d.Vehiculo.AnioVehiculo,
+                    ColorVehiculo = d.Vehiculo.ColorVehiculo,
+                    UrlFotoVehiculo = d.Vehiculo.urlFotoVehiculo,
+                    EstadoVehiculo = d.Vehiculo.EstadoVehiculo
+                })
+                .ToListAsync();
+        }
+
         public async Task<VehiculoDto> CrearVehiculo(VehiculoCreateDto dto)
         {
             var vehiculo = new Vehiculo

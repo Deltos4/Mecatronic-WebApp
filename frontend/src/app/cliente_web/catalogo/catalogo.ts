@@ -116,7 +116,7 @@ export class CatalogoComponent implements OnInit {
     return this.auth.isLoggedIn();
   }
 
-  irACitas(servicio: any): void {
+  irAReservas(servicio: any): void {
     if (!this.estaLogueado()) {
       this.mensajeModal = '¿Deseas reservar este servicio?';
       this.mostrarModalLogin = true;
@@ -136,7 +136,7 @@ export class CatalogoComponent implements OnInit {
       duracion: servicio.duracion,
       categoria: ''
     }));
-    this.router.navigate(['/cliente/citas/nueva', servicio.id]);
+    this.router.navigate(['/cliente/reservas/nueva', servicio.id]);
   }
 
   agregarProductoAlCarrito(producto: any): void {

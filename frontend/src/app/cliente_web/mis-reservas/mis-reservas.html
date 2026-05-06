@@ -2,9 +2,9 @@
 
   <div class="myservices-header">
     <div>
-      <h2 class="title">Mis servicios</h2>
+      <h2 class="title">Mis reservas</h2>
       <p class="subtitle">
-        Aquí podrás ver los servicios que has solicitado para tu vehículo,
+        Aquí podrás ver las reservas que has solicitado para tu vehículo,
         las citas programadas y el estado de cada atención en el taller.
       </p>
     </div>
@@ -17,16 +17,16 @@
   <!-- Cargando -->
   <div *ngIf="cargando" class="text-center my-4">
     <div class="spinner-border text-primary" role="status"></div>
-    <p class="mt-2 text-muted">Cargando servicios...</p>
+    <p class="mt-2 text-muted">Cargando reservas...</p>
   </div>
 
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <!-- Mensaje cuando no hay servicios -->
+  <!-- Mensaje cuando no hay reservas -->
   <div *ngIf="!cargando && citas.length === 0 && !error" class="empty-card">
     <div class="empty-icon">🛠️</div>
     <div>
-      <h5 class="mb-1">Aún no tienes servicios registrados</h5>
+      <h5 class="mb-1">Aún no tienes reservas registradas</h5>
       <p class="text-muted mb-0">
         Cuando programes un servicio o reserves una cita en el taller,
         aparecerá aquí el estado de tu atención.
@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <!-- Lista de servicios -->
+  <!-- Lista de reservas -->
   <div *ngFor="let c of citas" class="service-card">
 
     <div class="service-top">
@@ -42,7 +42,7 @@
         <div class="dot"></div>
         <div class="name-block">
           <div class="name">{{ c.servicioNombre || 'Servicio no especificado' }}</div>
-          <div class="date">Fecha del servicio: {{ formatearFecha(c.fechaISO) }}</div>
+          <div class="date">Fecha de reserva: {{ formatearFecha(c.fechaISO) }}</div>
         </div>
       </div>
 
@@ -72,11 +72,11 @@
 
     <div class="actions">
       <button *ngIf="c.estado === 'Pendiente' || c.estado === 'Confirmada'"
-              class="btn btn-outline-danger btn-sm" (click)="cancelarCita(c.id)">
+              class="btn btn-outline-danger btn-sm" (click)="cancelarReserva(c.id)">
         Cancelar
       </button>
       <span *ngIf="c.estado === 'Atendida' || c.estado === 'Completada'"
-            class="text-success small fw-semibold">Servicio completado</span>
+            class="text-success small fw-semibold">Reserva completada</span>
       <span *ngIf="c.estado === 'Cancelada'"
             class="text-muted small">Ya cancelada</span>
     </div>

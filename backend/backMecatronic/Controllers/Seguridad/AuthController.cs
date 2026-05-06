@@ -17,15 +17,45 @@ namespace backMecatronic.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            var user = await _authService.Registrar(dto);
-            return Ok(user);
+            try
+            {
+                var user = await _authService.Registrar(dto);
+                return Ok(user);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message, code = "email_exists" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message, code = "invalid_input" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message, code = "register_failed" });
+            }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var result = await _authService.Login(dto);
-            return Ok(result);
+            try
+            {
+                var result = await _authService.Login(dto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message, code = "user_not_found" });
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message, code = "invalid_password" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message, code = "login_failed" });
+            }
         }
     }
 }

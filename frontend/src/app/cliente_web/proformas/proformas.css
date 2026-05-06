@@ -1,0 +1,17 @@
+.proformas-page {
+  border-radius: 14px;
+}
+
+.empty-card {
+  border: 1px dashed #cbd5f5;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.empty-icon {
+  font-size: 32px;
+}

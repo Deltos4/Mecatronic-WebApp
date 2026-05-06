@@ -23,12 +23,14 @@ import { KardexComponent } from './inventario/kardex/kardex';
 // ===== CLIENTE =====
 import { CatalogoComponent } from './cliente_web/catalogo/catalogo';
 import { CarritoComponent } from './cliente_web/carrito/carrito';
-import { CitasComponent } from './cliente_web/citas/citas';
-import { MisServiciosComponent } from './cliente_web/mis-servicios/mis-servicios';
+import { ReservasComponent } from './cliente_web/reservas/reservas';
+import { MisReservasComponent } from './cliente_web/mis-reservas/mis-reservas';
 import { MisPedidosComponent } from './cliente_web/mis-pedidos/mis-pedidos';
 import { PerfilComponent } from './cliente_web/perfil/perfil';
 import { RegistroComponent } from './cliente_web/registro/registro';
 import { Landing } from './cliente_web/landing/landing';
+import { VehiculosClienteComponent } from './cliente_web/vehiculos/vehiculos';
+import { ProformasClienteComponent } from './cliente_web/proformas/proformas';
 
 // ===== AUTH =====
 import { LoginComponent } from './auth/login/login';
@@ -47,17 +49,19 @@ export const routes: Routes = [
 
   // ===== CLIENTE (requiere login) =====
   {
-    path: 'cliente',
-    canActivate: [clienteGuard],
-    children: [
-      { path: 'carrito', component: CarritoComponent },
-      { path: 'citas', component: CitasComponent },
-      { path: 'citas/nueva/:idServicio', component: CitasComponent },
-      { path: 'mis-servicios', component: MisServiciosComponent },
-      { path: 'mis-pedidos', component: MisPedidosComponent },
-      { path: 'perfil', component: PerfilComponent },
-      {
-        path: 'pago',
+      path: 'cliente',
+      canActivate: [clienteGuard],
+      children: [
+        { path: 'carrito', component: CarritoComponent },
+        { path: 'reservas', component: ReservasComponent },
+        { path: 'reservas/nueva/:idServicio', component: ReservasComponent },
+        { path: 'mis-pedidos', component: MisPedidosComponent },
+        { path: 'mis-reservas', component: MisReservasComponent },
+        { path: 'vehiculos', component: VehiculosClienteComponent },
+        { path: 'proformas', component: ProformasClienteComponent },
+        { path: 'perfil', component: PerfilComponent },
+        {
+          path: 'pago',
         loadComponent: () =>
           import('./cliente_web/pago/pago').then(m => m.PagoComponent),
       },

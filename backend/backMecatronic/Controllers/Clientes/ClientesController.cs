@@ -1,5 +1,6 @@
 ﻿using backMecatronic.Models.DTOs.Clientes;
 using backMecatronic.Services.Clientes;
+using backMecatronic.Services.External;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backMecatronic.Controllers.Clientes
@@ -9,10 +10,12 @@ namespace backMecatronic.Controllers.Clientes
     public class ClientesController : ControllerBase
     {
         private readonly IClienteService _service;
+        private readonly IApiPeruService _apiPeruService;
 
-        public ClientesController(IClienteService service)
+        public ClientesController(IClienteService service, IApiPeruService apiPeruService)
         {
             _service = service;
+            _apiPeruService = apiPeruService;
         }
 
         [HttpGet]
@@ -50,6 +53,16 @@ namespace backMecatronic.Controllers.Clientes
             var result = await _service.EliminarCliente(id);
             if (!result) return NotFound();
             return NoContent();
+        }
+
+        [HttpGet("consulta-dni/{dni}")]
+        public async Task<IActionResult> ConsultarDni(string dni)
+        {
+            if (string.IsNullOrWhiteSpace(dni) || dni.Length != 8 || !dni.All(char.IsDigit))
+                return BadRequest(new { message = "DNI inválido." });
+
+            var result = await _apiPeruService.ConsultarDni(dni);
+            return Ok(result);
         }
     }
 }
