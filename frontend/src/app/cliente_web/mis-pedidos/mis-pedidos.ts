@@ -27,13 +27,17 @@ export class MisPedidosComponent implements OnInit {
 
     this.api.getMisPedidos().subscribe({
       next: (data) => {
-        this.pedidos = data ?? [];
+        this.pedidos = (data ?? []).map((p: any) => this.normalizePedido(p));
         this.cargando = false;
         this.cdr.detectChanges();
       },
       error: () => {
         this.api.getPedidos().subscribe({
-          next: (data) => { this.pedidos = data ?? []; this.cargando = false; this.cdr.detectChanges(); },
+          next: (data) => {
+            this.pedidos = (data ?? []).map((p: any) => this.normalizePedido(p));
+            this.cargando = false;
+            this.cdr.detectChanges();
+          },
           error: () => { this.error = 'Error al cargar pedidos.'; this.cargando = false; this.cdr.detectChanges(); }
         });
       }
@@ -41,7 +45,7 @@ export class MisPedidosComponent implements OnInit {
   }
 
   getTotalPedido(p: any): number {
-    return p.total ?? p.total_pedido ?? (p.items ?? []).reduce((acc: number, it: any) => acc + (it.precio * it.cantidad), 0);
+    return p.total ?? (p.items ?? []).reduce((acc: number, it: any) => acc + ((it.precio ?? it.precio_unitario) * it.cantidad), 0);
   }
 
   getEstadoClase(estado: string): string {
@@ -64,23 +68,29 @@ export class MisPedidosComponent implements OnInit {
 
   cancelarPedido(pedido: any): void {
     if (!pedido) return;
-    const estadoActual = (pedido.estado_pedido ?? pedido.estado ?? '').toString().toLowerCase();
+    const estadoActual = (pedido.estado ?? '').toString().toLowerCase();
     if (estadoActual !== 'pendiente') return;
-    const id = pedido.id_pedido ?? pedido.id;
-    if (!id) return;
+    if (!pedido.id) return;
     if (!confirm('¿Cancelar este pedido?')) return;
 
-    this.api.cancelarPedido(id).subscribe({
+    this.api.cancelarPedido(pedido.id).subscribe({
       next: () => {
-        if (pedido.estado_pedido !== undefined) {
-          pedido.estado_pedido = 'Cancelado';
-        } else {
-          pedido.estado = 'Cancelado';
-        }
+        pedido.estado = 'Cancelado';
       },
       error: () => {
         this.error = 'No se pudo cancelar el pedido.';
       }
     });
+  }
+
+  private normalizePedido(p: any): any {
+    return {
+      ...p,
+      id: p.id_pedido ?? p.id,
+      estado: p.estado_pedido ?? p.estado ?? 'Pendiente',
+      fecha: p.fecha_pedido ?? p.fechaISO ?? p.fecha ?? '',
+      total: p.total_pedido ?? p.total ?? null,
+      items: p.items ?? p.detalles ?? []
+    };
   }
 }

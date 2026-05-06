@@ -41,7 +41,7 @@ export class PerfilComponent implements OnInit {
     if (usuario) {
       this.perfil.nombre = usuario.nombre ?? '';
       this.perfil.apellido = (usuario as any).apellido ?? '';
-      this.perfil.telefono = ((usuario as any).telefono ?? '').toString();
+      this.perfil.telefono = this.normalizeText((usuario as any).telefono);
       this.perfil.correo = (usuario as any).correo ?? usuario.correoUsuario ?? '';
     }
 
@@ -56,12 +56,12 @@ export class PerfilComponent implements OnInit {
         if (data) {
           this.perfil = {
             idTipoDocumento: data.id_tipo_documento ?? this.perfil.idTipoDocumento ?? 1,
-            numeroDocumento: (data.numero_documento_cliente ?? '').toString(),
+            numeroDocumento: this.normalizeText(data.numero_documento_cliente),
             nombre: data.nombre_cliente ?? data.nombre_usuario ?? this.perfil.nombre,
             apellido: data.apellido_cliente ?? this.perfil.apellido,
-            telefono: (data.telefono_cliente ?? this.perfil.telefono ?? '').toString(),
+            telefono: this.normalizeText(data.telefono_cliente ?? this.perfil.telefono),
             correo: data.correo_usuario ?? this.perfil.correo,
-            direccion: (data.direccion_cliente ?? '').toString()
+            direccion: this.normalizeText(data.direccion_cliente)
           };
         }
       },
@@ -160,5 +160,11 @@ export class PerfilComponent implements OnInit {
   cerrarSesion(): void {
     this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  private normalizeText(value: unknown): string {
+    if (typeof value === 'string') return value;
+    if (value == null) return '';
+    return String(value);
   }
 }
