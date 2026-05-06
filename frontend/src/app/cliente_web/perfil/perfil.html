@@ -25,7 +25,6 @@
     <div class="col-md-5">
       <label class="form-label">Número de documento</label>
       <input class="form-control" [(ngModel)]="perfil.numeroDocumento" placeholder="Ingresa tu documento">
-      <small class="form-text text-muted">Puedes consultar tus datos si es DNI.</small>
     </div>
     <div class="col-md-3 d-flex align-items-end">
       <button
@@ -35,6 +34,9 @@
       >
         {{ consultandoDni ? 'Consultando...' : 'Consultar DNI' }}
       </button>
+    </div>
+    <div class="col-12">
+      <small class="form-text text-muted">Puedes consultar tus datos si es DNI.</small>
     </div>
     <div class="col-md-6">
       <label class="form-label">Nombre <span class="text-danger">*</span></label>

@@ -88,7 +88,7 @@ export class RegistroComponent {
 
     try {
       await firstValueFrom(this.authService.register({
-        IdRol: 4,
+        IdRol: 0,
         NombreUsuario: `${nombre} ${apellido}`.trim(),
         CorreoUsuario: correo,
         Contrasena: pass

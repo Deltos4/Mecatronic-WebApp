@@ -78,7 +78,8 @@ export class MisReservasComponent implements OnInit {
   cancelarReserva(id: number): void {
     const cita = this.citas.find(c => c.id === id);
     if (!cita) return;
-    if (cita.estado === 'Cancelada' || cita.estado === 'Atendida' || cita.estado === 'Completada') return;
+    const estado = (cita.estado ?? '').toString().toLowerCase();
+    if (estado !== 'pendiente') return;
     if (!confirm('¿Cancelar esta reserva?')) return;
 
     this.api.cancelarReserva(id).subscribe({
@@ -86,8 +87,7 @@ export class MisReservasComponent implements OnInit {
         cita.estado = 'Cancelada';
       },
       error: () => {
-        // Fallback: actualizar local
-        cita.estado = 'Cancelada';
+        this.error = 'No se pudo cancelar la reserva.';
       }
     });
   }

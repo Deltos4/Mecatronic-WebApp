@@ -165,6 +165,9 @@ export class ApiService {
   getMisReservas()           { return this.get<any[]>('mis-reservas'); }
   cancelarReserva(id: number){ return this.put<any>(`reservas/${id}/cancelar`, {}); }
 
+  // MIS PEDIDOS (cliente autenticado)
+  cancelarPedido(id: number){ return this.put<any>(`pedidos/${id}/cancelar`, {}); }
+
   // MARCAS / CATEGORÍAS PRODUCTO
   getMarcasProducto()        { return this.get<any[]>('productos/marcas'); }
   getCategoriasProducto()    { return this.get<any[]>('productos/categorias'); }

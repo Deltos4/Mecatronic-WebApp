@@ -54,5 +54,16 @@ namespace backMecatronic.Controllers.Operaciones
             if (!result) return NotFound();
             return Ok();
         }
+
+        [HttpPut("{id}/cancelar")]
+        public async Task<IActionResult> Cancelar(int id)
+        {
+            var result = await _service.CancelarPedido(id);
+            if (result == null) return NotFound();
+            if (result == false)
+                return BadRequest(new { message = "Solo se pueden cancelar pedidos en estado Pendiente." });
+
+            return Ok();
+        }
     }
 }

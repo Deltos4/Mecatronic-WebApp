@@ -71,7 +71,7 @@
     </div>
 
     <div class="actions">
-      <button *ngIf="c.estado === 'Pendiente' || c.estado === 'Confirmada'"
+      <button *ngIf="c.estado === 'Pendiente'"
               class="btn btn-outline-danger btn-sm" (click)="cancelarReserva(c.id)">
         Cancelar
       </button>

@@ -145,5 +145,19 @@ namespace backMecatronic.Services.Operaciones
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool?> CancelarPedido(int id)
+        {
+            var pedido = await _context.Pedido.FindAsync(id);
+            if (pedido == null)
+                return null;
+
+            if (!string.Equals(pedido.EstadoPedido, "Pendiente", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            pedido.EstadoPedido = "Cancelado";
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

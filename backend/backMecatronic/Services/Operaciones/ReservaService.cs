@@ -157,5 +157,19 @@ namespace backMecatronic.Services.Operaciones
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool?> CancelarReserva(int id)
+        {
+            var reserva = await _context.Reserva.FindAsync(id);
+            if (reserva == null)
+                return null;
+
+            if (!string.Equals(reserva.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            reserva.Estado = "Cancelada";
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
