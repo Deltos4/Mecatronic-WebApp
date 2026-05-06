@@ -74,11 +74,12 @@ export class LoginComponent {
 
           const code = err?.error?.code as string | undefined;
           const message = (err?.error?.message ?? '').toString();
+          const messageLower = message.toLowerCase();
 
-          if (err.status === 404 || code === 'user_not_found') {
-            this.errorMessage = 'Usuario no encontrado.';
-          } else if (err.status === 401 || code === 'invalid_password') {
-            this.errorMessage = 'Contraseña incorrecta.';
+          if (err.status === 404 || code === 'user_not_found' || messageLower.includes('usuario no encontrado') || messageLower.includes('correo')) {
+            this.errorMessage = 'El correo no está registrado.';
+          } else if (err.status === 401 || code === 'invalid_password' || messageLower.includes('contraseña')) {
+            this.errorMessage = 'La contraseña ingresada es incorrecta.';
           } else if (err.status === 400 && message) {
             this.errorMessage = message;
           } else if (err.status === 403 && err.error?.sin_verificar) {

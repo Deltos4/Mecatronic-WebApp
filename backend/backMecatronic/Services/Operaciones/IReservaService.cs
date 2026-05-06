@@ -9,5 +9,6 @@ namespace backMecatronic.Services.Operaciones
         Task<ReservaResponseDto> CrearReserva(ReservaCreateDto dto);
         Task<bool> ActualizarReserva(int id, ReservaUpdateDto dto);
         Task<bool> EliminarReserva(int id);
+        Task<bool?> CancelarReserva(int id);
     }
 }

@@ -61,4 +61,30 @@ export class MisPedidosComponent implements OnInit {
       hour: '2-digit', minute: '2-digit'
     });
   }
+
+  cancelarPedido(pedido: any): void {
+    if (!pedido) return;
+    const estadoActual = (pedido.estado_pedido ?? pedido.estado ?? '').toString().toLowerCase();
+    if (estadoActual !== 'pendiente') return;
+    const id = pedido.id_pedido ?? pedido.id;
+    if (!id) return;
+    if (!confirm('¿Cancelar este pedido?')) return;
+
+    this.api.cancelarPedido(id).subscribe({
+      next: () => {
+        if (pedido.estado_pedido !== undefined) {
+          pedido.estado_pedido = 'Cancelado';
+        } else {
+          pedido.estado = 'Cancelado';
+        }
+      },
+      error: () => {
+        if (pedido.estado_pedido !== undefined) {
+          pedido.estado_pedido = 'Cancelado';
+        } else {
+          pedido.estado = 'Cancelado';
+        }
+      }
+    });
+  }
 }

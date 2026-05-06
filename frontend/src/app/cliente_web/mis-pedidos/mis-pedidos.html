@@ -66,6 +66,15 @@
           </table>
         </div>
       </div>
+
+      <div class="mt-3 d-flex justify-content-end">
+        <button *ngIf="(p.estado_pedido ?? p.estado) === 'Pendiente'"
+                class="btn btn-outline-danger btn-sm" (click)="cancelarPedido(p)">
+          Cancelar pedido
+        </button>
+        <span *ngIf="(p.estado_pedido ?? p.estado) === 'Cancelado'"
+              class="text-muted small">Pedido cancelado</span>
+      </div>
     </div>
   </div>
 </div>

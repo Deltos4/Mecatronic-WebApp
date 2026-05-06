@@ -56,12 +56,12 @@ export class PerfilComponent implements OnInit {
         if (data) {
           this.perfil = {
             idTipoDocumento: data.id_tipo_documento ?? this.perfil.idTipoDocumento ?? 1,
-            numeroDocumento: data.numero_documento_cliente ?? '',
+            numeroDocumento: (data.numero_documento_cliente ?? '').toString(),
             nombre: data.nombre_cliente ?? data.nombre_usuario ?? this.perfil.nombre,
             apellido: data.apellido_cliente ?? this.perfil.apellido,
-            telefono: data.telefono_cliente ?? this.perfil.telefono,
+            telefono: (data.telefono_cliente ?? this.perfil.telefono ?? '').toString(),
             correo: data.correo_usuario ?? this.perfil.correo,
-            direccion: data.direccion_cliente ?? ''
+            direccion: (data.direccion_cliente ?? '').toString()
           };
         }
       },
@@ -79,7 +79,7 @@ export class PerfilComponent implements OnInit {
     this.mensaje = '';
     this.error = '';
 
-    const dni = (this.perfil.numeroDocumento ?? '').trim();
+    const dni = (this.perfil.numeroDocumento ?? '').toString().trim();
 
     if (!/^\d{8}$/.test(dni)) {
       this.error = 'El DNI debe tener 8 dígitos.';
@@ -121,24 +121,30 @@ export class PerfilComponent implements OnInit {
     this.mensaje = '';
     this.error = '';
 
-    if (!this.perfil.nombre.trim()) { this.error = 'El nombre es obligatorio.'; return; }
-    if (!this.perfil.apellido.trim()) { this.error = 'El apellido es obligatorio.'; return; }
-    if (this.esDni && this.perfil.numeroDocumento && !/^\d{8}$/.test(this.perfil.numeroDocumento.trim())) {
+    const nombre = (this.perfil.nombre ?? '').toString().trim();
+    const apellido = (this.perfil.apellido ?? '').toString().trim();
+    const numeroDocumento = (this.perfil.numeroDocumento ?? '').toString().trim();
+    const telefono = (this.perfil.telefono ?? '').toString().trim();
+    const direccion = (this.perfil.direccion ?? '').toString().trim();
+
+    if (!nombre) { this.error = 'El nombre es obligatorio.'; return; }
+    if (!apellido) { this.error = 'El apellido es obligatorio.'; return; }
+    if (this.esDni && numeroDocumento && !/^\d{8}$/.test(numeroDocumento)) {
       this.error = 'El DNI debe tener 8 dígitos.';
       return;
     }
-    if (this.perfil.telefono && !/^9\d{8}$/.test(this.perfil.telefono.trim())) {
+    if (telefono && !/^9\d{8}$/.test(telefono)) {
       this.error = 'Celular inválido (9 dígitos, empieza con 9).'; return;
     }
 
     this.cargando = true;
     this.api.put<any>('perfil', {
       idTipoDocumento: Number(this.perfil.idTipoDocumento) || 1,
-      numeroDocumentoCliente: this.perfil.numeroDocumento.trim() || null,
-      nombreCliente: this.perfil.nombre.trim(),
-      apellidoCliente: this.perfil.apellido.trim(),
-      telefonoCliente: this.perfil.telefono.trim() || null,
-      direccionCliente: this.perfil.direccion.trim() || null
+      numeroDocumentoCliente: numeroDocumento || null,
+      nombreCliente: nombre,
+      apellidoCliente: apellido,
+      telefonoCliente: telefono || null,
+      direccionCliente: direccion || null
     }).subscribe({
       next: () => {
         this.cargando = false;
